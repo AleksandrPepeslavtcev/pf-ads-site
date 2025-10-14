@@ -1,0 +1,21 @@
+backend:
+  name: github
+  repo: AleksandrPepeslavtcev/pf-ads-site    # твой GitHub-репозиторий
+  branch: main
+  base_url: https://cms-oauth.pf-ads.com     # адрес твоего OAuth-прокси на Cloudflare Workers
+  auth_endpoint: /api/auth
+
+media_folder: "images/uploads"
+public_folder: "/images/uploads"
+
+collections:
+  - name: "blog"
+    label: "Blog"
+    folder: "blog"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Date", name: "date", widget: "datetime" }
+      - { label: "Summary", name: "summary", widget: "text", required: false }
+      - { label: "Body", name: "body", widget: "markdown" }
