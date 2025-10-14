@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+Sitemap: https://www.pf-ads.com/sitemap.xml
+Host: www.pf-ads.com
