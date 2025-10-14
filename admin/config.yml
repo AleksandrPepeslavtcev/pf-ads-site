@@ -2,7 +2,7 @@ backend:
   name: github
   repo: AleksandrPepeslavtcev/pf-ads-site    # твой GitHub-репозиторий
   branch: main
-  base_url: https://cms-oauth.pf-ads.com     # адрес твоего OAuth-прокси на Cloudflare Workers
+  base_url: https://cms-oauth.incvizitor.workers.dev     # адрес твоего OAuth-прокси на Cloudflare Workers
   auth_endpoint: /api/auth
 
 media_folder: "images/uploads"
