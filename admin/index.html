@@ -5,11 +5,19 @@
   <title>PF ADS CMS</title>
   <meta name="robots" content="noindex, nofollow" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
   <style>
     body { margin:0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
     .nc-appHeader { background:#0080ff; }
   </style>
 </head>
-<body></body>
+<body>
+  <!-- Корневой контейнер для админки -->
+  <div id="nc-root"></div>
+
+  <!-- Подключаем CMS ПОСЛЕ разметки -->
+  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+  <!-- Резервный CDN на случай, если unpkg недоступен:
+  <script src="https://cdn.jsdelivr.net/npm/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+  -->
+</body>
 </html>
