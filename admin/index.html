@@ -1,64 +1,33 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8">
-  <title>PF ADS CMS</title>
-  <meta name="robots" content="noindex, nofollow">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <!-- ВАЖНО: включаем ручную инициализацию ПЕРЕД загрузкой CMS -->
-  <script>
-    window.CMS_MANUAL_INIT = true;
-  </script>
-
-  <!-- CMS: основной CDN -->
-  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
-  <!-- Резервный CDN, если вдруг первый не грузится:
-  <script src="https://cdn.jsdelivr.net/npm/decap-cms@^3.0.0/dist/decap-cms.js"></script>
-  -->
-
-  <style>
-    body { margin:0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
-    .nc-appHeader { background:#0080ff; }
-  </style>
-</head>
-<body>
+<script>window.CMS_MANUAL_INIT = true;</script>
+<script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
 <script>
-  // Инициализация CMS после загрузки скрипта
-  function startCMS() {
-    CMS.init({
-      config: {
-        backend: {
-          name: "github",
-          repo: "AleksandrPepeslavtcev/pf-ads-site", // например: AleksandrPereslavtcev/pf-ads-site
-          branch: "main",
-          base_url: "cms-oauth.pf-ads.com",       // или https://cms-oauth.<твоя>.workers.dev
-          auth_endpoint: "/api/auth"
-        },
-        media_folder: "images/uploads",
-        public_folder: "/images/uploads",
-        publish_mode: "editorial_workflow",
-        collections: [
-          {
-            name: "blog",
-            label: "Blog",
-            folder: "blog",
-            create: true,
-            slug: "{{year}}-{{month}}-{{day}}-{{slug}}",
-            fields: [
-              { label: "Title", name: "title", widget: "string" },
-              { label: "Date", name: "date", widget: "datetime" },
-              { label: "Summary", name: "summary", widget: "text", required: false },
-              { label: "Body", name: "body", widget: "markdown" }
-            ]
-          }
-        ]
-      }
-    });
-  }
-
-  if (document.readyState === "complete") startCMS();
-  else window.addEventListener("load", startCMS);
+  CMS.init({
+    config: {
+      backend: {
+        name: "github",
+        repo: "AleksandrPepeslavtcev/pf-ads-site",
+        branch: "main",
+        base_url: "https://cms-oauth.pf-ads.com",
+        auth_endpoint: "/api/auth"
+      },
+      media_folder: "images/uploads",
+      public_folder: "/images/uploads",
+      publish_mode: "editorial_workflow",
+      collections: [
+        {
+          name: "blog",
+          label: "Blog",
+          folder: "blog",
+          create: true,
+          slug: "{{year}}-{{month}}-{{day}}-{{slug}}",
+          fields: [
+            { label: "Title", name: "title", widget: "string" },
+            { label: "Date", name: "date", widget: "datetime" },
+            { label: "Summary", name: "summary", widget: "text", required: false },
+            { label: "Body", name: "body", widget: "markdown" }
+          ]
+        }
+      ]
+    }
+  });
 </script>
-</body>
-</html>
