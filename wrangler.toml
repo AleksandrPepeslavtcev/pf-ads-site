@@ -1,5 +1,0 @@
-name = "cms-oauth"
-main = "worker.js"
-compatibility_date = "2025-10-15"
-# если хочешь фиксированный аккаунт без логина:
-account_id = "879a2156dd00f7dca73660a8005e0271"   # см. в Cloudflare → Overview (справа)
