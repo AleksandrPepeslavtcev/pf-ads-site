@@ -1,32 +1,47 @@
 backend:
   name: github
-  repo: pf-ads/website        
+  repo: pf-ads/website            # <owner>/<repo>
   branch: main
   base_url: https://api.github.com
   auth_type: token
-  token: GITHUB_TOKEN
-  site_url: https://www.pf-ads.com       
-  display_url: https://www.pf-ads.com
-  logo_url: /images/logo.png
+  token: GITHUB_TOKEN             # имя переменной в Pages (Secret)
 
+site_url: https://www.pf-ads.com
+display_url: https://www.pf-ads.com
 publish_mode: editorial_workflow
 
-media_folder: "images/uploads"         
-public_folder: "/uploads"              
+media_folder: "static/uploads"    # куда кладём в репозитории
+public_folder: "/uploads"         # как доступны на сайте
 
 collections:
-  - name: "blog"
-    label: "blog"
-    folder: "/blog"
+  - name: "posts"
+    label: "Posts"
+    folder: "content/posts"
     create: true
     slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
     fields:
       - { label: "Title", name: "title", widget: "string" }
       - { label: "Date", name: "date", widget: "datetime" }
-      - { label: "Description", name: "description", widget: "text" }
+      - { label: "Description", name: "description", widget: "text", required: false }
       - { label: "Body", name: "body", widget: "markdown" }
 
-local_backend: false                     
-load_config_file: false                  
+  - name: "pages"
+    label: "Pages"
+    files:
+      - label: "About"
+        name: "about"
+        file: "content/pages/about.md"
+        fields:
+          - { label: "Title", name: "title", widget: "string" }
+          - { label: "Body", name: "body", widget: "markdown" }
+      - label: "Services"
+        name: "services"
+        file: "content/pages/services.md"
+        fields:
+          - { label: "Title", name: "title", widget: "string" }
+          - { label: "Body", name: "body", widget: "markdown" }
 
-publish_events: true
+commit_messages:
+  create: "Create {{collection}} “{{slug}}”"
+  update: "Update {{collection}} “{{slug}}”"
+  delete: "Delete {{collection}} “{{slug}}”"
