@@ -4,20 +4,19 @@ backend:
   branch: main
   base_url: https://auth.pf-ads.com   
   auth_endpoint: /auth       
-
-site_url: https://www.pf-ads.com       
-display_url: https://www.pf-ads.com
-logo_url: /images/logo.png
+  site_url: https://www.pf-ads.com       
+  display_url: https://www.pf-ads.com
+  logo_url: /images/logo.png
 
 publish_mode: editorial_workflow
 
-media_folder: "static/uploads"         
+media_folder: "images/uploads"         
 public_folder: "/uploads"              
 
 collections:
-  - name: "posts"
-    label: "Posts"
-    folder: "content/posts"
+  - name: "blog"
+    label: "blog"
+    folder: "/blog"
     create: true
     slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
     fields:
