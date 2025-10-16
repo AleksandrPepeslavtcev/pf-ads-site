@@ -4,6 +4,7 @@ backend:
   branch: main
   base_url: https://auth.pf-ads.com
   auth_endpoint: /api/auth
+  site_domain: https://www.pf-ads.com
 
 media_folder: "images/uploads"
 public_folder: "/images/uploads"
