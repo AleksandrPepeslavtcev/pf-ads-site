@@ -1,24 +1,32 @@
 backend:
   name: github
-  repo: AleksandrPepeslavtcev/pf-ads-site
+  repo: pf-ads/website        
   branch: main
-  base_url: https://auth.pf-ads.com
-  auth_endpoint: /api/auth
-  site_domain: https://www.pf-ads.com
+  base_url: https://auth.pf-ads.com   
+  auth_endpoint: /callback             
 
-media_folder: "images/uploads"
-public_folder: "/images/uploads"
+site_url: https://www.pf-ads.com       
+display_url: https://www.pf-ads.com
+logo_url: /images/logo.png
 
 publish_mode: editorial_workflow
 
+media_folder: "static/uploads"         
+public_folder: "/uploads"              
+
 collections:
-  - name: "blog"
-    label: "Blog"
-    folder: "blog"
+  - name: "posts"
+    label: "Posts"
+    folder: "content/posts"
     create: true
     slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
     fields:
       - { label: "Title", name: "title", widget: "string" }
       - { label: "Date", name: "date", widget: "datetime" }
-      - { label: "Summary", name: "summary", widget: "text", required: false }
+      - { label: "Description", name: "description", widget: "text" }
       - { label: "Body", name: "body", widget: "markdown" }
+
+local_backend: false                     
+load_config_file: false                  
+
+publish_events: true
