@@ -2,6 +2,7 @@ backend:
   name: github
   repo: pf-ads/website
   branch: main
+  base_url: /api/github  
   token: GITHUB_TOKEN
   
 site_url: https://www.pf-ads.com
