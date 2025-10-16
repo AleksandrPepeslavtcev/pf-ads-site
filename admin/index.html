@@ -6,14 +6,55 @@
     <meta name="robots" content="noindex" />
   </head>
   <body>
-    <!-- Static CMS (UMD build) -->
-    <script src="https://unpkg.com/@staticcms/app@^2.0.0/dist/static-cms-app.js"></script>
-
-    <!-- Явная инициализация -->
+    <script>window.CMS_MANUAL_INIT = true;</script>
+    <script src="https://unpkg.com/decap-cms@^3.8.4/dist/decap-cms.js"></script>
     <script>
-      (window.CMS || window.StaticCMS || window.StaticCms).init({
-        // по умолчанию ищет /admin/config.yml, но укажем явно
-        configPath: 'config.yml'
+      CMS.init({
+        load_config_file: false,
+        config: {
+          backend: {
+            name: 'github',
+            repo: 'AleksandrPepeslavtcev/pf-ads-site', // твой репозиторий
+            branch: 'main',
+            auth_type: 'token',
+            token: GITHUB_TOKEN,
+            api_root: 'https://api.github.com'
+          },
+          site_url: 'https://www.pf-ads.com',
+          display_url: 'https://www.pf-ads.com',
+          publish_mode: 'editorial_workflow',
+          media_folder: 'images/uploads',
+          public_folder: '/images/uploads',
+          collections: [
+            {
+              name: 'blog',
+              label: 'Blog',
+              folder: 'blog',
+              create: true,
+              slug: '{{slug}}',
+              fields: [
+                { label: 'Title', name: 'title', widget: 'string' },
+                { label: 'Date', name: 'date', widget: 'datetime' },
+                { label: 'Image', name: 'image', widget: 'image', required: false },
+                { label: 'Body',  name: 'body',  widget: 'markdown' }
+              ]
+            },
+            {
+              name: 'cases',
+              label: 'Cases',
+              folder: 'cases',
+              create: true,
+              slug: '{{year}}-{{month}}-{{slug}}',
+              fields: [
+                { label: 'Title', name: 'title', widget: 'string' },
+                { label: 'Subtitle', name: 'subtitle', widget: 'string', required: false },
+                { label: 'Date', name: 'date', widget: 'datetime' },
+                { label: 'Thumbnail', name: 'thumbnail', widget: 'image', required: false },
+                { label: 'Body',  name: 'body',  widget: 'markdown' }
+              ]
+            }
+          ]
+        }
       });
     </script>
   </body>
