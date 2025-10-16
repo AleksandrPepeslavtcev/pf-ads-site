@@ -6,10 +6,7 @@
     <meta name="robots" content="noindex" />
   </head>
   <body>
-    <!-- Подключаем Static CMS (без дублей styled-components) -->
-    <script type="module">
-      import "https://unpkg.com/@staticcms/app@^2.0.0/dist/static-cms-app.js";
-    </script>
+    <!-- ✅ Static CMS через UMD — работает на Cloudflare Pages -->
+    <script src="https://unpkg.com/@staticcms/app@^2.0.0/dist/static-cms-app.js"></script>
   </body>
 </html>
-
