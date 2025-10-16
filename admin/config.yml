@@ -1,47 +1,47 @@
 backend:
   name: github
-  repo: pf-ads/website            # <owner>/<repo>
+  repo: pf-ads/website             
   branch: main
   base_url: https://api.github.com
   auth_type: token
-  token: GITHUB_TOKEN             # имя переменной в Pages (Secret)
+  token: GITHUB_TOKEN              
+  commit_messages:
+    create: "Create {{collection}} “{{slug}}”"
+    update: "Update {{collection}} “{{slug}}”"
+    delete: "Delete {{collection}} “{{slug}}”"
 
 site_url: https://www.pf-ads.com
 display_url: https://www.pf-ads.com
 publish_mode: editorial_workflow
 
-media_folder: "static/uploads"    # куда кладём в репозитории
-public_folder: "/uploads"         # как доступны на сайте
+# === Место хранения изображений ===
+media_folder: "images/uploads"     
+public_folder: "/images/uploads"   
 
 collections:
-  - name: "posts"
-    label: "Posts"
-    folder: "content/posts"
+  - name: "blog"
+    label: "Blog"
+    folder: "blog"                  
     create: true
-    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    slug: "{{slug}}"
     fields:
       - { label: "Title", name: "title", widget: "string" }
       - { label: "Date", name: "date", widget: "datetime" }
-      - { label: "Description", name: "description", widget: "text", required: false }
+      - { label: "Image", name: "image", widget: "image", required: false }
       - { label: "Body", name: "body", widget: "markdown" }
 
   - name: "pages"
     label: "Pages"
     files:
-      - label: "About"
-        name: "about"
-        file: "content/pages/about.md"
+      - label: "Home Page"
+        name: "home"
+        file: "index.html"
         fields:
           - { label: "Title", name: "title", widget: "string" }
           - { label: "Body", name: "body", widget: "markdown" }
-      - label: "Services"
-        name: "services"
-        file: "content/pages/services.md"
+      - label: "Contact Page"
+        name: "contact"
+        file: "contact.html"
         fields:
           - { label: "Title", name: "title", widget: "string" }
           - { label: "Body", name: "body", widget: "markdown" }
-
-commit_messages:
-  create: "Create {{collection}} “{{slug}}”"
-  update: "Update {{collection}} “{{slug}}”"
-  delete: "Delete {{collection}} “{{slug}}”"
