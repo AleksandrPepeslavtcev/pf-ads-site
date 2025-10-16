@@ -6,7 +6,54 @@
     <meta name="robots" content="noindex" />
   </head>
   <body>
+    <script>window.CMS_MANUAL_INIT = true;</script>
     <script src="https://unpkg.com/decap-cms@^3.8.4/dist/decap-cms.js"></script>
+    <script>
+      CMS.init({
+        config: {
+          backend: {
+            name: 'github',
+            repo: 'pf-ads/website',
+            branch: 'main',
+            auth_type: 'token',
+            token: GITHUB_TOKEN
+          },
+          site_url: 'https://www.pf-ads.com',
+          display_url: 'https://www.pf-ads.com',
+          media_folder: 'images/uploads',
+          public_folder: '/images/uploads',
+          publish_mode: 'editorial_workflow',
+          collections: [
+            {
+              name: 'blog',
+              label: 'Blog',
+              folder: 'blog',
+              create: true,
+              slug: '{{slug}}',
+              fields: [
+                { label: 'Title', name: 'title', widget: 'string' },
+                { label: 'Date', name: 'date', widget: 'datetime' },
+                { label: 'Image', name: 'image', widget: 'image', required: false },
+                { label: 'Body',  name: 'body',  widget: 'markdown' }
+              ]
+            },
+            {
+              name: 'cases',
+              label: 'Cases',
+              folder: 'cases',
+              create: true,
+              slug: '{{year}}-{{month}}-{{slug}}',
+              fields: [
+                { label: 'Title', name: 'title', widget: 'string' },
+                { label: 'Subtitle', name: 'subtitle', widget: 'string', required: false },
+                { label: 'Date', name: 'date', widget: 'datetime' },
+                { label: 'Thumbnail', name: 'thumbnail', widget: 'image', required: false },
+                { label: 'Body', name: 'body', widget: 'markdown' }
+              ]
+            }
+          ]
+        }
+      });
+    </script>
   </body>
 </html>
-
