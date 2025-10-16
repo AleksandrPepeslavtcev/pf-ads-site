@@ -1,54 +1,37 @@
 backend:
   name: github
-  repo: pf-ads/website
+  repo: pf-ads/website        # твой <owner>/<repo>
   branch: main
-  base_url: /api/github  
-  token: GITHUB_TOKEN
+  auth_type: token
+  token: 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
   
 site_url: https://www.pf-ads.com
 display_url: https://www.pf-ads.com
 publish_mode: editorial_workflow
 
-media_folder: "images/uploads"     
-public_folder: "/images/uploads"   
+media_folder: "images/uploads"
+public_folder: "/images/uploads"
 
 collections:
   - name: "blog"
     label: "Blog"
-    folder: "blog"                  
+    folder: "blog"
     create: true
     slug: "{{slug}}"
     fields:
       - { label: "Title", name: "title", widget: "string" }
       - { label: "Date", name: "date", widget: "datetime" }
       - { label: "Image", name: "image", widget: "image", required: false }
-      - { label: "Body", name: "body", widget: "markdown" }
+      - { label: "Body",  name: "body",  widget: "markdown" }
 
-  - name: "pages"
-    label: "Pages"
-    files:
-      - label: "Home Page"
-        name: "home"
-        file: "index.html"
-        fields:
-          - { label: "Title", name: "title", widget: "string" }
-          - { label: "Body", name: "body", widget: "markdown" }
-      - label: "Contact Page"
-        name: "contact"
-        file: "contact.html"
-        fields:
-          - { label: "Title", name: "title", widget: "string" }
-          - { label: "Body", name: "body", widget: "markdown" }
   - name: "cases"
     label: "Cases"
-    folder: "cases"                    
+    folder: "cases"
     create: true
     slug: "{{year}}-{{month}}-{{slug}}"
-    preview_path: "cases/{{slug}}"      
     fields:
       - { label: "Title", name: "title", widget: "string" }
       - { label: "Subtitle", name: "subtitle", widget: "string", required: false }
       - { label: "Date", name: "date", widget: "datetime" }
       - { label: "Thumbnail", name: "thumbnail", widget: "image", required: false }
-      - { label: "Body", name: "body", widget: "markdown" }
-
+      - { label: "Body",  name: "body",  widget: "markdown" }
