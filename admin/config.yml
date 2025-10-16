@@ -1,10 +1,11 @@
 backend:
   name: github
-  repo: pf-ads/website        # твой <owner>/<repo>
+  repo: AleksandrPepeslavtcev/pf-ads-site  
   branch: main
   auth_type: token
-  token: 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
-  
+  token: "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"
+  api_root: https://api.github.com         
+
 site_url: https://www.pf-ads.com
 display_url: https://www.pf-ads.com
 publish_mode: editorial_workflow
@@ -22,7 +23,7 @@ collections:
       - { label: "Title", name: "title", widget: "string" }
       - { label: "Date", name: "date", widget: "datetime" }
       - { label: "Image", name: "image", widget: "image", required: false }
-      - { label: "Body",  name: "body",  widget: "markdown" }
+      - { label: "Body", name: "body", widget: "markdown" }
 
   - name: "cases"
     label: "Cases"
@@ -34,4 +35,4 @@ collections:
       - { label: "Subtitle", name: "subtitle", widget: "string", required: false }
       - { label: "Date", name: "date", widget: "datetime" }
       - { label: "Thumbnail", name: "thumbnail", widget: "image", required: false }
-      - { label: "Body",  name: "body",  widget: "markdown" }
+      - { label: "Body", name: "body", widget: "markdown" }
