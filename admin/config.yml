@@ -3,7 +3,7 @@ backend:
   repo: pf-ads/website        
   branch: main
   base_url: https://auth.pf-ads.com   
-  auth_endpoint: /callback             
+  auth_endpoint: /auth       
 
 site_url: https://www.pf-ads.com       
 display_url: https://www.pf-ads.com
