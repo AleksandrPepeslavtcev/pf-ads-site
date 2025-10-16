@@ -6,7 +6,15 @@
     <meta name="robots" content="noindex" />
   </head>
   <body>
-    <!-- ✅ Static CMS через UMD — работает на Cloudflare Pages -->
+    <!-- Static CMS (UMD build) -->
     <script src="https://unpkg.com/@staticcms/app@^2.0.0/dist/static-cms-app.js"></script>
+
+    <!-- Явная инициализация -->
+    <script>
+      (window.CMS || window.StaticCMS || window.StaticCms).init({
+        // по умолчанию ищет /admin/config.yml, но укажем явно
+        configPath: 'config.yml'
+      });
+    </script>
   </body>
 </html>
