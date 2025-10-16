@@ -2,8 +2,9 @@ backend:
   name: github
   repo: pf-ads/website        
   branch: main
-  base_url: https://auth.pf-ads.com   
-  auth_endpoint: /auth       
+  base_url: https://api.github.com
+  auth_type: token
+  token: GITHUB_TOKEN
   site_url: https://www.pf-ads.com       
   display_url: https://www.pf-ads.com
   logo_url: /images/logo.png
