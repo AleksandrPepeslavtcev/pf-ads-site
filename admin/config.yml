@@ -3,8 +3,7 @@ backend:
   repo: AleksandrPepeslavtcev/pf-ads-site
   branch: main
   base_url: https://www.pf-ads.com
-  site_url: https://www.pf-ads.com
-  auth_type: implicit
+  auth_scope: repo
   app_id: "Ov23liB9OZZ7mdtgK4HL"
 
 media_folder: "assets/images/uploads"
