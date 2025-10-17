@@ -1,199 +1,38 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html>
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Панель управления PF-ADS</title>
-  
-  <!-- Загрузка Decap CMS -->
+  <title>PF-ADS CMS</title>
   <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
-  
-  <style>
-    * {
-      box-sizing: border-box;
-    }
-    
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      margin: 0;
-      padding: 0;
-      background: #f5f5f5;
-    }
-    
-    #cms-container {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-    
-    .loading {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      flex-direction: column;
-      background: white;
-    }
-    
-    .error {
-      background: #ffebee;
-      color: #c62828;
-      padding: 30px;
-      border-radius: 10px;
-      margin: 40px;
-      text-align: center;
-      border: 1px solid #ffcdd2;
-    }
-    
-    .error button {
-      background: #c62828;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 5px;
-      cursor: pointer;
-      margin: 10px;
-      font-size: 14px;
-    }
-    
-    .error button:hover {
-      background: #b71c1c;
-    }
-  </style>
 </head>
 <body>
-  <!-- Контейнер для CMS -->
-  <div id="cms-container"></div>
-
-  <!-- Состояние загрузки -->
-  <div id="cms-loading" class="loading">
-    <h2>🔄 Загрузка панели управления PF-ADS</h2>
-    <p>Инициализация редактора контента...</p>
-  </div>
-
-  <!-- Состояние ошибки -->
-  <div id="cms-error" class="error" style="display: none;">
-    <h3>❌ Ошибка загрузки редактора</h3>
-    <p>Пожалуйста, проверьте:</p>
-    <ul style="text-align: left; display: inline-block;">
-      <li>Настройки OAuth приложения в GitHub</li>
-      <li>Правильность callback URL</li>
-      <li>Доступность репозитория</li>
-    </ul>
-    <div style="margin-top: 20px;">
-      <button onclick="window.location.reload()">🔄 Перезагрузить</button>
-      <button onclick="checkConfig()">🔧 Проверить настройки</button>
+  <noscript>
+    <div style="padding: 20px; text-align: center;">
+      <h2>Требуется JavaScript</h2>
+      <p>Для работы редактора необходимо включить JavaScript</p>
     </div>
-  </div>
-
+  </noscript>
+  
   <script>
-    function checkConfig() {
-      const config = {
-        repo: 'AleksandrPepeslavtcev/pf-ads-site',
-        branch: 'main',
-        baseUrl: 'https://www.pf-ads.com',
-        callbackUrl: 'https://www.pf-ads.com/admin/'
-      };
-      
-      alert(`Проверьте настройки GitHub OAuth App:\n\n` +
-            `Application name: PF ADS CMS\n` +
-            `Homepage URL: ${config.baseUrl}\n` +
-            `Authorization callback URL: ${config.callbackUrl}\n\n` +
-            `Убедитесь что OAuth App установлен в вашем репозитории.`);
-    }
-
-    // Основная инициализация
-    function initializeCMS() {
-      console.log('🚀 Инициализация Decap CMS...');
-      
-      try {
-        // Сначала скрываем loading
-        const loadingElement = document.getElementById('cms-loading');
-        if (loadingElement) {
-          loadingElement.style.display = 'none';
-        }
-
-        // Проверяем что CMS загружен
-        if (typeof CMS === 'undefined') {
-          throw new Error('CMS не загружен');
-        }
-
-        // Регистрируем русскую локаль
-        CMS.registerLocale('ru', {
-          app: {
-            header: {
-              content: 'Контент',
-              media: 'Медиа',
-              workflow: 'Workflow',
-              quickAdd: 'Быстрое добавление'
-            },
-            buttons: {
-              save: 'Сохранить',
-              saving: 'Сохранение...',
-              delete: 'Удалить',
-              uploading: 'Загрузка...'
-            }
-          }
-        });
-
-        console.log('✅ CMS загружен, запускаем инициализацию...');
-        
-        // Инициализируем CMS
-        CMS.init({
-          config: {
-            locale: 'ru'
-          }
-        });
-        
-        console.log('✅ CMS успешно инициализирован!');
-        
-      } catch (error) {
-        console.error('❌ Ошибка инициализации CMS:', error);
-        
-        // Показываем ошибку
-        const loadingElement = document.getElementById('cms-loading');
-        const errorElement = document.getElementById('cms-error');
-        
-        if (loadingElement) loadingElement.style.display = 'none';
-        if (errorElement) errorElement.style.display = 'block';
-      }
-    }
-
-    // Ждем полной загрузки страницы
+    // Ждем полной загрузки
     window.addEventListener('load', function() {
-      console.log('📄 Страница загружена, проверяем CMS...');
-      
-      // Даем время на загрузку скриптов
-      setTimeout(function() {
-        if (typeof CMS !== 'undefined') {
-          initializeCMS();
-        } else {
-          console.log('⏳ CMS еще не загружен, ждем...');
-          
-          // Продолжаем проверять
-          const checkInterval = setInterval(function() {
-            if (typeof CMS !== 'undefined') {
-              clearInterval(checkInterval);
-              initializeCMS();
-            }
-          }, 500);
-          
-          // Таймаут
-          setTimeout(function() {
-            clearInterval(checkInterval);
-            if (typeof CMS === 'undefined') {
-              console.error('❌ Таймаут: CMS не загрузился');
-              document.getElementById('cms-loading').style.display = 'none';
-              document.getElementById('cms-error').style.display = 'block';
-            }
-          }, 10000);
-        }
-      }, 1000);
-    });
-
-    // Также проверяем при DOMContentLoaded
-    document.addEventListener('DOMContentLoaded', function() {
-      console.log('🔧 DOM готов');
+      if (typeof CMS !== 'undefined') {
+        console.log('Initializing CMS...');
+        CMS.init();
+      } else {
+        document.body.innerHTML = `
+          <div style="padding: 40px; text-align: center;">
+            <h2>Ошибка загрузки CMS</h2>
+            <p>Попробуйте:</p>
+            <ol style="display: inline-block; text-align: left;">
+              <li>Проверить настройки OAuth в GitHub</li>
+              <li>Убедиться что репозиторий доступен</li>
+              <li><a href="javascript:location.reload()">Перезагрузить страницу</a></li>
+            </ol>
+          </div>
+        `;
+      }
     });
   </script>
 </body>
