@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if page.title %}{{ page.title }} | {% endif %}{{ site.title }}</title>
+    <meta name="description" content="{{ page.description | default: site.description }}">
+    
+    <!-- Подключение существующих стилей -->
+    <link rel="stylesheet" href="/assets/css/style.css">
+    
+    <!-- Дополнительные стили для блога -->
+    <style>
+        .blog-nav {
+            background: #f8f9fa;
+            padding: 1rem 0;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .blog-nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .blog-nav-links a {
+            margin-left: 1.5rem;
+            text-decoration: none;
+            color: #495057;
+        }
+        
+        .blog-nav-links a:hover {
+            color: #667eea;
+        }
+        
+        .admin-badge {
+            background: #28a745;
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            margin-left: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Существующий хедер -->
+    <header>
+        <!-- Ваш существующий хедер -->
+    </header>
+
+    <!-- Навигация блога -->
+    <nav class="blog-nav">
+        <div class="blog-nav-container">
+            <div class="blog-nav-home">
+                <a href="/">🏠 Главная сайта</a>
+            </div>
+            <div class="blog-nav-links">
+                <a href="/blog/">📝 Блог</a>
+                <a href="/cases/">📊 Кейсы</a>
+                <a href="/admin/">
+                    ✏️ Редактор 
+                    <span class="admin-badge">ADMIN</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        {{ content }}
+    </main>
+
+    <!-- Существующий футер -->
+    <footer>
+        <!-- Ваш существующий футер -->
+    </footer>
+</body>
+</html>
