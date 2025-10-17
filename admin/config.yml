@@ -3,9 +3,12 @@ backend:
   repo: AleksandrPepeslavtcev/pf-ads-site
   branch: main
   base_url: https://www.pf-ads.com
-  auth_endpoint: https://github.com/login/oauth/authorize
-  site_url: https://www.pf-ads.com
-
+  auth_scope: repo
+  app_id: "Ov23HB9OZZ7motgK"
+  api_root: "https://api.github.com"
+  auth_endpoint: "https://github.com/login/oauth/authorize"
+  site_url: "https://www.pf-ads.com"
+  
 # Настройки медиа
 media_folder: "assets/images/uploads"
 public_folder: "/assets/images/uploads"
