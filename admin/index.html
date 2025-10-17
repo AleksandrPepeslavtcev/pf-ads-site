@@ -6,56 +6,6 @@
     <meta name="robots" content="noindex" />
   </head>
   <body>
-    <script>window.CMS_MANUAL_INIT = true;</script>
     <script src="https://unpkg.com/decap-cms@^3.8.4/dist/decap-cms.js"></script>
-    <script>
-      CMS.init({
-        load_config_file: false,
-        config: {
-          backend: {
-            name: 'github',
-            repo: 'AleksandrPepeslavtcev/pf-ads-site', // твой репозиторий
-            branch: 'main',
-            auth_type: 'token',
-            token: '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',
-            api_root: 'https://api.github.com'
-          },
-          site_url: 'https://www.pf-ads.com',
-          display_url: 'https://www.pf-ads.com',
-          publish_mode: 'editorial_workflow',
-          media_folder: 'images/uploads',
-          public_folder: '/images/uploads',
-          collections: [
-            {
-              name: 'blog',
-              label: 'Blog',
-              folder: 'blog',
-              create: true,
-              slug: '{{slug}}',
-              fields: [
-                { label: 'Title', name: 'title', widget: 'string' },
-                { label: 'Date', name: 'date', widget: 'datetime' },
-                { label: 'Image', name: 'image', widget: 'image', required: false },
-                { label: 'Body',  name: 'body',  widget: 'markdown' }
-              ]
-            },
-            {
-              name: 'cases',
-              label: 'Cases',
-              folder: 'cases',
-              create: true,
-              slug: '{{year}}-{{month}}-{{slug}}',
-              fields: [
-                { label: 'Title', name: 'title', widget: 'string' },
-                { label: 'Subtitle', name: 'subtitle', widget: 'string', required: false },
-                { label: 'Date', name: 'date', widget: 'datetime' },
-                { label: 'Thumbnail', name: 'thumbnail', widget: 'image', required: false },
-                { label: 'Body',  name: 'body',  widget: 'markdown' }
-              ]
-            }
-          ]
-        }
-      });
-    </script>
   </body>
 </html>
