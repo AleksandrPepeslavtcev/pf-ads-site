@@ -2,37 +2,65 @@ backend:
   name: github
   repo: AleksandrPepeslavtcev/pf-ads-site
   branch: main
-  base_url: /oauth
-  auth_endpoint: /auth
+  base_url: https://www.pf-ads.com
+  auth_scope: repo
+  app_id: "Ov23HB9OZZ7motgK"
+  api_root: "https://api.github.com"
+  auth_endpoint: "https://github.com/login/oauth/authorize"
+  token_endpoint: "https://github.com/login/oauth/access_token"
 
+# Настройки медиа-файлов
+media_folder: "assets/images/uploads"
+public_folder: "/assets/images/uploads"
 
-site_url: https://www.pf-ads.com
-display_url: https://www.pf-ads.com
+# Режим публикации (черновики -> на проверке -> опубликовано)
 publish_mode: editorial_workflow
 
-media_folder: "images/uploads"
-public_folder: "/images/uploads"
-
+# Коллекции
 collections:
-  - name: "blog"
-    label: "Blog"
-    folder: "blog"
+  - name: "posts"
+    label: "Посты блога"
+    folder: "_posts"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    editor:
+      preview: false
+    fields:
+      - { label: "Layout", name: "layout", widget: "hidden", default: "post" }
+      - { label: "Заголовок", name: "title", widget: "string" }
+      - { label: "Дата публикации", name: "date", widget: "datetime" }
+      - { 
+          label: "Категории", 
+          name: "categories", 
+          widget: "list",
+          default: ["general"]
+        }
+      - { 
+          label: "Теги", 
+          name: "tags", 
+          widget: "list",
+          required: false 
+        }
+      - { 
+          label: "Краткое описание", 
+          name: "excerpt", 
+          widget: "text",
+          required: false 
+        }
+      - { 
+          label: "Изображение", 
+          name: "image", 
+          widget: "image",
+          required: false
+        }
+      - { label: "Содержание", name: "body", widget: "markdown" }
+
+  - name: "cases"
+    label: "Кейсы"
+    folder: "cases"
     create: true
     slug: "{{slug}}"
     fields:
-      - { label: "Title", name: "title", widget: "string" }
-      - { label: "Date", name: "date", widget: "datetime" }
-      - { label: "Image", name: "image", widget: "image", required: false }
-      - { label: "Body", name: "body", widget: "markdown" }
-
-  - name: "cases"
-    label: "Cases"
-    folder: "cases"
-    create: true
-    slug: "{{year}}-{{month}}-{{slug}}"
-    fields:
-      - { label: "Title", name: "title", widget: "string" }
-      - { label: "Subtitle", name: "subtitle", widget: "string", required: false }
-      - { label: "Date", name: "date", widget: "datetime" }
-      - { label: "Thumbnail", name: "thumbnail", widget: "image", required: false }
-      - { label: "Body", name: "body", widget: "markdown" }
+      - { label: "Заголовок", name: "title", widget: "string" }
+      - { label: "Описание", name: "description", widget: "text" }
+      - { label: "Содержание", name: "body", widget: "markdown" }
