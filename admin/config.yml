@@ -4,7 +4,7 @@ backend:
   branch: main
   base_url: https://www.pf-ads.com
   auth_scope: repo
-  app_id: "Ov23liB9OZZ7motgK5w"
+  app_id: "Ov23liB9OZZ7mdtgK4HL"
 
 media_folder: "assets/images/uploads"
 public_folder: "/assets/images/uploads"
