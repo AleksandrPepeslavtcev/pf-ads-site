@@ -8,18 +8,14 @@ backend:
 
 media_folder: "assets/images/uploads"
 public_folder: "/assets/images/uploads"
-locale: "ru"
-publish_mode: simple
 
 collections:
   - name: "posts"
-    label: "Посты блога"
+    label: "Blog Posts"
     folder: "_posts"
     create: true
     slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
     fields:
-      - { label: "Layout", name: "layout", widget: "hidden", default: "post" }
-      - { label: "Заголовок", name: "title", widget: "string" }
-      - { label: "Дата публикации", name: "date", widget: "datetime" }
-      - { label: "Категории", name: "categories", widget: "list" }
-      - { label: "Содержание", name: "body", widget: "markdown" }
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Publish Date", name: "date", widget: "datetime" }
+      - { label: "Body", name: "body", widget: "markdown" }
