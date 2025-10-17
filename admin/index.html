@@ -4,46 +4,56 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PF-ADS Content Manager</title>
-  
-  <!-- Загружаем конкретные версии React которые совместимы с Decap CMS -->
-  <script src="https://unpkg.com/react@17.0.2/umd/react.production.min.js"></script>
-  <script src="https://unpkg.com/react-dom@17.0.2/umd/react-dom.production.min.js"></script>
-  
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background: #fff;
-    }
-    #root {
-      min-height: 100vh;
-    }
-  </style>
 </head>
 <body>
-  <!-- Контейнер с ID который ожидает Decap CMS -->
-  <div id="root"></div>
+  <div id="root">
+    <div style="padding: 40px; text-align: center;">
+      <h2>Загрузка редактора PF-ADS...</h2>
+      <p id="status">Инициализация системы</p>
+    </div>
+  </div>
 
-  <!-- Стабильная версия Decap CMS -->
-  <script src="https://cdn.jsdelivr.net/npm/decap-cms@2.10.192/dist/decap-cms.js"></script>
-  
   <script>
-    // Простая инициализация после загрузки
-    if (window.CMS) {
-      console.log('CMS loaded, initializing...');
-      CMS.init();
-    } else {
-      document.body.innerHTML = `
-        <div style="padding: 40px; text-align: center;">
-          <h2>Ошибка загрузки CMS</h2>
-          <p>Пожалуйста, попробуйте перезагрузить страницу</p>
-          <button onclick="location.reload()" style="padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer;">
-            Перезагрузить
-          </button>
-        </div>
-      `;
+    // Пробуем разные источники для загрузки CMS
+    const cmsSources = [
+      'https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js',
+      'https://cdn.jsdelivr.net/npm/decap-cms@3.8.4/dist/decap-cms.js',
+      'https://cdnjs.cloudflare.com/ajax/libs/decap-cms/3.8.4/decap-cms.js',
+      'https://unpkg.com/netlify-cms@^2.0.0/dist/netlify-cms.js'
+    ];
+
+    let currentSource = 0;
+
+    function loadCMS() {
+      if (currentSource >= cmsSources.length) {
+        document.getElementById('status').innerHTML = '❌ Все источники недоступны. Попробуйте позже.';
+        return;
+      }
+
+      const script = document.createElement('script');
+      script.src = cmsSources[currentSource];
+      script.onload = function() {
+        document.getElementById('status').innerHTML = '✅ CMS загружена, инициализация...';
+        if (window.CMS) {
+          try {
+            CMS.init();
+            document.getElementById('status').innerHTML = '✅ CMS успешно запущена!';
+          } catch (error) {
+            document.getElementById('status').innerHTML = '❌ Ошибка инициализации: ' + error.message;
+          }
+        }
+      };
+      script.onerror = function() {
+        document.getElementById('status').innerHTML = `❌ Источник ${currentSource + 1} недоступен, пробуем следующий...`;
+        currentSource++;
+        setTimeout(loadCMS, 1000);
+      };
+      
+      document.head.appendChild(script);
     }
+
+    // Начинаем загрузку
+    loadCMS();
   </script>
 </body>
 </html>
