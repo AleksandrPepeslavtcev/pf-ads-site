@@ -1,39 +1,181 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>PF-ADS CMS</title>
+  
+  <!-- Загрузка CMS через CDN -->
   <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+  
+  <style>
+    /* Сброс стилей и базовые настройки */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #fff;
+      height: 100vh;
+      overflow: hidden;
+    }
+    
+    #nc-root {
+      height: 100vh;
+      width: 100vw;
+    }
+    
+    .loading-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+    
+    .error-container {
+      padding: 40px;
+      text-align: center;
+      background: #ffebee;
+      color: #c62828;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .btn {
+      background: #667eea;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 6px;
+      cursor: pointer;
+      margin: 10px;
+      font-size: 16px;
+      text-decoration: none;
+      display: inline-block;
+    }
+    
+    .btn:hover {
+      background: #5a67d8;
+    }
+  </style>
 </head>
 <body>
-  <noscript>
-    <div style="padding: 20px; text-align: center;">
-      <h2>Требуется JavaScript</h2>
-      <p>Для работы редактора необходимо включить JavaScript</p>
+  <!-- Основной контейнер для CMS (ДОЛЖЕН СУЩЕСТВОВАТЬ) -->
+  <div id="nc-root"></div>
+
+  <!-- Состояние загрузки -->
+  <div id="loadingState" class="loading-container">
+    <h1>PF-ADS Content Manager</h1>
+    <p>Инициализация системы управления контентом...</p>
+    <div style="margin-top: 20px;">
+      <div style="width: 40px; height: 40px; border: 4px solid #fff; border-top: 4px solid transparent; border-radius: 50%; animation: spin 1s linear infinite;"></div>
     </div>
-  </noscript>
-  
+  </div>
+
+  <!-- Состояние ошибки -->
+  <div id="errorState" class="error-container" style="display: none;">
+    <h2>❌ Ошибка загрузки</h2>
+    <p style="margin: 20px 0; max-width: 500px;">
+      Не удалось загрузить редактор контента. Это может быть связано с настройками GitHub OAuth приложения или блокировкой скриптов.
+    </p>
+    <div>
+      <button class="btn" onclick="window.location.reload()">🔄 Перезагрузить</button>
+      <a class="btn" href="/" style="background: #718096;">🏠 На главную</a>
+      <button class="btn" onclick="showDebugInfo()" style="background: #4a5568;">🐛 Информация для отладки</button>
+    </div>
+    <div id="debugInfo" style="display: none; margin-top: 20px; text-align: left; background: white; padding: 15px; border-radius: 5px; color: #2d3748;">
+      <h4>Информация для разработчика:</h4>
+      <p><strong>Repo:</strong> AleksandrPepeslavtcev/pf-ads-site</p>
+      <p><strong>Branch:</strong> main</p>
+      <p><strong>Domain:</strong> https://www.pf-ads.com</p>
+      <p><strong>Callback URL:</strong> https://www.pf-ads.com/admin/</p>
+      <p><strong>OAuth Client ID:</strong> Ov23HB9OZZ7motgK...</p>
+    </div>
+  </div>
+
   <script>
-    // Ждем полной загрузки
-    window.addEventListener('load', function() {
-      if (typeof CMS !== 'undefined') {
-        console.log('Initializing CMS...');
-        CMS.init();
-      } else {
-        document.body.innerHTML = `
-          <div style="padding: 40px; text-align: center;">
-            <h2>Ошибка загрузки CMS</h2>
-            <p>Попробуйте:</p>
-            <ol style="display: inline-block; text-align: left;">
-              <li>Проверить настройки OAuth в GitHub</li>
-              <li>Убедиться что репозиторий доступен</li>
-              <li><a href="javascript:location.reload()">Перезагрузить страницу</a></li>
-            </ol>
-          </div>
-        `;
+    function showDebugInfo() {
+      document.getElementById('debugInfo').style.display = 'block';
+    }
+
+    // Основная функция инициализации
+    function initCMS() {
+      console.log('🔄 Starting CMS initialization...');
+      
+      // Скрываем loading
+      document.getElementById('loadingState').style.display = 'none';
+      
+      // Проверяем что CMS загружен
+      if (typeof CMS === 'undefined') {
+        console.error('❌ CMS script not loaded');
+        showError('CMS script failed to load');
+        return;
       }
+      
+      try {
+        console.log('✅ CMS loaded, initializing...');
+        
+        // Инициализируем CMS
+        CMS.init();
+        
+        console.log('✅ CMS initialized successfully');
+        
+      } catch (error) {
+        console.error('❌ CMS initialization error:', error);
+        showError('CMS initialization failed: ' + error.message);
+      }
+    }
+    
+    function showError(message) {
+      console.error('Showing error:', message);
+      document.getElementById('loadingState').style.display = 'none';
+      document.getElementById('errorState').style.display = 'flex';
+    }
+
+    // Стратегия загрузки 1: Ждем полной загрузки страницы
+    window.addEventListener('load', function() {
+      console.log('📄 Page fully loaded');
+      setTimeout(initCMS, 100);
     });
+
+    // Стратегия загрузки 2: Проверяем каждые 100ms
+    let checkCount = 0;
+    const maxChecks = 50; // 5 секунд максимум
+    
+    const checkInterval = setInterval(function() {
+      checkCount++;
+      
+      if (typeof CMS !== 'undefined') {
+        clearInterval(checkInterval);
+        console.log(`✅ CMS detected after ${checkCount} checks`);
+        initCMS();
+      }
+      
+      if (checkCount >= maxChecks) {
+        clearInterval(checkInterval);
+        console.error('❌ CMS timeout - script not loaded');
+        showError('CMS script loading timeout');
+      }
+    }, 100);
+
+    // Анимация загрузки
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+    `;
+    document.head.appendChild(style);
   </script>
 </body>
 </html>
