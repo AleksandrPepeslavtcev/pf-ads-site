@@ -28,6 +28,13 @@ a{color:var(--accent);text-decoration:none} a:hover{text-decoration:underline}
 .table{width:100%;border-collapse:collapse;margin-top:12px}
 .table th,.table td{border:1px solid #ccc;padding:10px;text-align:left;vertical-align:top}
 .table th{background:#f0f7fb}
+/* Базовые стили для блога */
+.post { max-width: 800px; margin: 0 auto; }
+.post-meta { color: #666; font-size: 0.9em; }
+.post-image { max-width: 100%; height: auto; }
+.posts-list { max-width: 800px; margin: 0 auto; }
+.post-preview { border-bottom: 1px solid #eee; padding: 2rem 0; }
+.read-more { display: inline-block; margin-top: 1rem; }
 @media(min-width:700px){.card{grid-column:span 6}}
 @media(min-width:980px){.card{grid-column:span 6}}
 
