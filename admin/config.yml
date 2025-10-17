@@ -5,7 +5,7 @@ backend:
   base_url: https://www.pf-ads.com
   site_url: https://www.pf-ads.com
   auth_type: implicit
-  app_id: "Ov23liB9OZZ7motgK5w"
+  app_id: "Ov23liB9OZZ7mdtgK4HL"
 
 media_folder: "assets/images/uploads"
 public_folder: "/assets/images/uploads"
