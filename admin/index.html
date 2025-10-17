@@ -3,28 +3,26 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Authentication - PF-ADS</title>
+  <title>PF-ADS CMS</title>
+  <script src="https://unpkg.com/netlify-cms@^2.10.0/dist/netlify-cms.js"></script>
 </head>
 <body>
   <script>
-    // Netlify CMS OAuth callback handler
-    if (window.opener) {
-      window.opener.postMessage({
-        type: 'authorization',
-        data: {
-          provider: 'github',
-          token: window.location.hash.substring(1)
+    // Добавляем обработку ошибок авторизации
+    if (window.CMS) {
+      console.log('Netlify CMS loaded');
+      
+      // Обработчик для ошибок авторизации
+      window.addEventListener('message', function(event) {
+        if (event.data && event.data.type === 'authorization_error') {
+          console.error('Auth error:', event.data.error);
+          alert('Ошибка авторизации: ' + event.data.error);
         }
-      }, '*');
-    } else {
-      // Если открыто в той же вкладке, редиректим обратно в админку
-      window.location.href = '/admin/';
+      });
+      
+      // Инициализируем CMS
+      CMS.init();
     }
   </script>
-  
-  <noscript>
-    <h2>Authentication Complete</h2>
-    <p>You can close this window and return to the CMS.</p>
-  </noscript>
 </body>
 </html>
