@@ -3,27 +3,84 @@ backend:
   repo: AleksandrPepeslavtcev/pf-ads-site
   branch: main
   base_url: https://www.pf-ads.com
-  auth_scope: repo
-  app_id: "Ov23HB9OZZ7motgK"
-  api_root: "https://api.github.com"
-  auth_endpoint: "https://github.com/login/oauth/authorize"
-  site_url: "https://www.pf-ads.com"
+  site_url: https://www.pf-ads.com
   
-# Настройки медиа
+  # 🔑 Аутентификация через переменные окружения
+  auth_type: implicit
+  app_id: "Ov23liB9OZZ7motgK5w"  # Ваш GITHUB_CLIENT_ID
+  
+  # Client secret будет через переменные окружения в Cloudflare
+  # GITHUB_CLIENT_SECRET задается в настройках Cloudflare Pages
+
+# Настройки медиа-файлов
 media_folder: "assets/images/uploads"
 public_folder: "/assets/images/uploads"
 
-# Отключим editorial_workflow для начала (может вызывать проблемы)
+# Локализация
+locale: "ru"
+
+# Режим публикации (simple - сразу публиковать, editorial_workflow - черновики)
 publish_mode: simple
 
+# Коллекции
 collections:
-  - name: "posts"
-    label: "Посты блога"
+  - name: "blog"
+    label: "Блог"
+    label_singular: "Пост"
     folder: "_posts"
     create: true
     slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    editor:
+      preview: false
     fields:
       - { label: "Layout", name: "layout", widget: "hidden", default: "post" }
-      - { label: "Title", name: "title", widget: "string" }
-      - { label: "Publish Date", name: "date", widget: "datetime" }
-      - { label: "Body", name: "body", widget: "markdown" }
+      - { label: "Заголовок", name: "title", widget: "string", required: true }
+      - { label: "Дата публикации", name: "date", widget: "datetime", required: true }
+      - { 
+          label: "Категории", 
+          name: "categories", 
+          widget: "list",
+          default: ["general"],
+          required: false
+        }
+      - { 
+          label: "Теги", 
+          name: "tags", 
+          widget: "list",
+          required: false 
+        }
+      - { 
+          label: "Краткое описание", 
+          name: "excerpt", 
+          widget: "text",
+          required: false 
+        }
+      - { 
+          label: "Обложка", 
+          name: "image", 
+          widget: "image",
+          required: false,
+          media_library:
+            config:
+              multiple: false
+        }
+      - { 
+          label: "Содержание", 
+          name: "body", 
+          widget: "markdown",
+          required: true 
+        }
+
+  - name: "pages"
+    label: "Страницы"
+    label_singular: "Страница"
+    folder: ""
+    create: true
+    slug: "{{slug}}"
+    editor:
+      preview: false
+    fields:
+      - { label: "Template Key", name: "templateKey", widget: "hidden", default: "page" }
+      - { label: "Title", name: "title", widget: "string", required: true }
+      - { label: "Permalink", name: "permalink", widget: "string", required: true }
+      - { label: "Body", name: "body", widget: "markdown", required: true }
