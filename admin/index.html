@@ -3,19 +3,115 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PF-ADS CMS</title>
+  <title>PF-ADS Content Manager</title>
+  
+  <!-- Загружаем React до Decap CMS чтобы избежать конфликтов -->
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  
+  <style>
+    /* Скрываем всё до загрузки CMS */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    
+    #cms-loading {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+    }
+    
+    #cms-root {
+      min-height: 100vh;
+    }
+  </style>
 </head>
 <body>
-  <div id="nc-root"></div>
-  
+  <!-- Основной контейнер для CMS -->
+  <div id="cms-root">
+    <div id="cms-loading">
+      <h2>Загрузка редактора PF-ADS...</h2>
+      <p>Пожалуйста, подождите</p>
+    </div>
+  </div>
+
+  <!-- Загружаем Decap CMS -->
   <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+  
   <script>
-    // Простейшая инициализация после загрузки скрипта
-    if (window.CMS) {
-      CMS.init();
-    } else {
-      document.body.innerHTML = '<div style="padding: 40px; text-align: center;"><h2>Error Loading CMS</h2><p>Please check your internet connection and try again.</p><button onclick="location.reload()">Reload</button></div>';
+    // Ждем полной загрузки страницы
+    window.addEventListener('load', function() {
+      console.log('🚀 Initializing CMS...');
+      
+      // Даем время на загрузку всех скриптов
+      setTimeout(initializeCMS, 100);
+    });
+
+    function initializeCMS() {
+      if (window.CMS && typeof window.CMS.init === 'function') {
+        try {
+          console.log('✅ CMS loaded, initializing...');
+          
+          // Сначала очищаем контейнер
+          const root = document.getElementById('cms-root');
+          if (root) {
+            root.innerHTML = ''; // Полностью очищаем
+          }
+          
+          // Инициализируем CMS
+          CMS.init();
+          
+          console.log('✅ CMS initialized successfully');
+          
+        } catch (error) {
+          console.error('❌ CMS initialization error:', error);
+          showError('Ошибка инициализации: ' + error.message);
+        }
+      } else {
+        console.error('❌ CMS not loaded');
+        showError('CMS не загрузилась');
+      }
     }
+
+    function showError(message) {
+      const root = document.getElementById('cms-root');
+      if (root) {
+        root.innerHTML = `
+          <div style="padding: 40px; text-align: center;">
+            <h2>❌ Ошибка</h2>
+            <p>${message}</p>
+            <button onclick="window.location.reload()" style="padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 5px; cursor: pointer; margin: 10px;">
+              🔄 Перезагрузить
+            </button>
+            <a href="/" style="padding: 10px 20px; background: #718096; color: white; text-decoration: none; border-radius: 5px; margin: 10px; display: inline-block;">
+              🏠 На главную
+            </a>
+          </div>
+        `;
+      }
+    }
+
+    // Альтернативная инициализация через интервал
+    let cmsCheckCount = 0;
+    const cmsCheckInterval = setInterval(function() {
+      cmsCheckCount++;
+      
+      if (window.CMS && typeof window.CMS.init === 'function') {
+        clearInterval(cmsCheckInterval);
+        console.log(`✅ CMS detected after ${cmsCheckCount} checks`);
+        initializeCMS();
+      }
+      
+      if (cmsCheckCount > 50) { // 5 секунд
+        clearInterval(cmsCheckInterval);
+        console.error('❌ CMS loading timeout');
+        showError('Таймаут загрузки CMS');
+      }
+    }, 100);
   </script>
 </body>
 </html>
