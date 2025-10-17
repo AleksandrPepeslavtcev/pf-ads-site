@@ -1,10 +1,10 @@
 backend:
   name: github
-  repo: AleksandrPepeslavtcev/pf-ads-site  
+  repo: AleksandrPepeslavtcev/pf-ads-site
   branch: main
-  auth_type: token
-  token: GITHUB_TOKEN
-  api_root: https://api.github.com         
+  base_url: /oauth
+  auth_endpoint: /auth
+
 
 site_url: https://www.pf-ads.com
 display_url: https://www.pf-ads.com
