@@ -4,22 +4,101 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PF-ADS CMS</title>
-  <!-- Конкретная стабильная версия -->
-  <script src="https://cdn.jsdelivr.net/npm/decap-cms@3.1.0/dist/decap-cms.js"></script>
 </head>
 <body>
+  <div id="root"></div>
+
+  <!-- Пробуем самый базовый вариант -->
+  <script src="https://unpkg.com/netlify-cms@2.10.192/dist/netlify-cms.js"></script>
+  
   <script>
-    if (window.CMS) {
-      console.log('Decap CMS 3.1.0 loaded');
-      // Инициализируем с задержкой чтобы избежать конфликтов
-      setTimeout(() => {
-        try {
-          CMS.init();
-          console.log('CMS initialized successfully');
-        } catch (error) {
-          console.error('CMS init error:', error);
-        }
-      }, 1000);
+    // Ждем 5 секунд и проверяем
+    setTimeout(function() {
+      if (window.CMS) {
+        CMS.init();
+      } else {
+        showManualEditor();
+      }
+    }, 5000);
+    
+    function showManualEditor() {
+      document.body.innerHTML = `
+        <div style="padding: 40px; max-width: 800px; margin: 0 auto;">
+          <h1>✏️ PF-ADS Редактор постов</h1>
+          <p style="color: #666;">CMS не загрузилась. Используйте этот простой редактор:</p>
+          
+          <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
+            <h3>📝 Создать новый пост</h3>
+            <form id="postForm">
+              <div style="margin-bottom: 15px;">
+                <label><strong>Заголовок:</strong></label>
+                <input type="text" id="title" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;" required>
+              </div>
+              <div style="margin-bottom: 15px;">
+                <label><strong>Содержание (Markdown):</strong></label>
+                <textarea id="content" style="width: 100%; height: 300px; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-family: monospace;" required></textarea>
+              </div>
+              <button type="submit" style="background: #667eea; color: white; padding: 12px 24px; border: none; border-radius: 4px; cursor: pointer; font-size: 16px;">
+                📄 Сгенерировать пост
+              </button>
+            </form>
+          </div>
+          
+          <div style="margin-top: 30px;">
+            <h3>📁 Существующие посты</h3>
+            <a href="https://github.com/AleksandrPepeslavtcev/pf-ads-site/tree/main/_posts" target="_blank" style="display: inline-block; padding: 10px 20px; background: #333; color: white; text-decoration: none; border-radius: 4px;">
+              📂 Открыть папку с постами на GitHub
+            </a>
+          </div>
+        </div>
+      `;
+
+      document.getElementById('postForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const title = document.getElementById('title').value;
+        const content = document.getElementById('content').value;
+        const date = new Date().toISOString().split('T')[0];
+        const slug = title.toLowerCase().replace(/[^a-z0-9а-яё]+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
+        const filename = `${date}-${slug}.md`;
+        
+        const postContent = `---
+title: "${title}"
+date: ${new Date().toISOString()}
+---
+${content}
+`;
+
+        document.body.innerHTML = `
+          <div style="padding: 40px; max-width: 800px; margin: 0 auto;">
+            <h1>✅ Пост готов!</h1>
+            
+            <div style="background: #e8f5e8; padding: 20px; border-radius: 8px; margin: 20px 0;">
+              <h3>📋 Что делать дальше:</h3>
+              <ol>
+                <li>Скопируйте содержимое ниже</li>
+                <li>Перейдите в <a href="https://github.com/AleksandrPepeslavtcev/pf-ads-site/new/main/_posts" target="_blank">GitHub</a></li>
+                <li>Введите имя файла: <code>_posts/${filename}</code></li>
+                <li>Вставьте содержимое и нажмите "Commit new file"</li>
+              </ol>
+            </div>
+
+            <div style="background: #f5f5f5; padding: 15px; border-radius: 4px; margin: 20px 0;">
+              <strong>Имя файла:</strong> ${filename}
+            </div>
+
+            <textarea style="width: 100%; height: 400px; font-family: monospace; padding: 15px; border: 1px solid #ddd; border-radius: 4px;">${postContent}</textarea>
+            
+            <div style="margin-top: 20px;">
+              <a href="https://github.com/AleksandrPepeslavtcev/pf-ads-site/new/main/_posts" target="_blank" style="display: inline-block; padding: 12px 24px; background: #2ea44f; color: white; text-decoration: none; border-radius: 4px; margin-right: 10px;">
+                📝 Создать файл на GitHub
+              </a>
+              <button onclick="location.reload()" style="padding: 12px 24px; background: #667eea; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                ✨ Создать еще один пост
+              </button>
+            </div>
+          </div>
+        `;
+      });
     }
   </script>
 </body>
