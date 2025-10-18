@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>LinkedIn Callback</title>
+</head>
+<body>
+  <h2>LinkedIn Authorization Complete</h2>
+  <div id="result"></div>
+  
+  <script>
+    // Извлекаем параметры из URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get('code');
+    const error = urlParams.get('error');
+    const errorDescription = urlParams.get('error_description');
+    
+    const resultDiv = document.getElementById('result');
+    
+    if (error) {
+      resultDiv.innerHTML = `
+        <p style="color: red;">Error: ${error}</p>
+        <p>${errorDescription}</p>
+      `;
+    } else if (code) {
+      resultDiv.innerHTML = `
+        <p style="color: green;">✅ Authorization successful!</p>
+        <p>Your authorization code:</p>
+        <textarea id="codeText" style="width: 100%; height: 60px; font-family: monospace;">${code}</textarea>
+        <p>Copy this code and paste it in the importer tool.</p>
+        <button onclick="copyCode()">Copy Code</button>
+        <button onclick="window.close()">Close Window</button>
+      `;
+    } else {
+      resultDiv.innerHTML = '<p>No authorization data received.</p>';
+    }
+    
+    function copyCode() {
+      const textarea = document.getElementById('codeText');
+      textarea.select();
+      document.execCommand('copy');
+      alert('Code copied to clipboard!');
+    }
+  </script>
+</body>
+</html>
