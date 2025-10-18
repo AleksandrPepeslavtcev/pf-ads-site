@@ -5,12 +5,10 @@ export async function onRequestPost(context) {
     const body = await request.json();
     const { action, code, access_token } = body;
     
-    // 🔑 Ваши реальные данные
     const LINKEDIN_CLIENT_ID = '77c7i4jjqp5e8g';
     const LINKEDIN_CLIENT_SECRET = 'WPL_AP1.hziPFMoFR4e7sXgs.z7dGvg==';
     const REDIRECT_URI = 'https://www.pf-ads.com/linkedin/callback';
     
-    // 1. Получение access token по коду
     if (action === 'get_token' && code) {
       const tokenResponse = await fetch('https://www.linkedin.com/oauth/v2/accessToken', {
         method: 'POST',
@@ -40,7 +38,7 @@ export async function onRequestPost(context) {
         headers: { 'Content-Type': 'application/json' }
       });
     }
-    
+ 
     // 2. Получение постов с access token
     if (action === 'get_posts' && access_token) {
       // Сначала получаем профиль пользователя
