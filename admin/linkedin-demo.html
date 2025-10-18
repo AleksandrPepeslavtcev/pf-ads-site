@@ -1,1 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LinkedIn Demo Importer - PF-ADS</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+    .post { border: 1px solid #ddd; padding: 15px; margin: 10px 0; border-radius: 8px; }
+    button { background: #0077b5; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; margin: 5px; }
+    textarea { width: 100%; height: 150px; padding: 10px; border: 1px solid #ddd; border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <h1>📥 Импорт контента для PF-ADS</h1>
+  
+  <div style="background: #fff3cd; padding: 15px; border-radius: 8px; margin: 20px 0;">
+    <strong>Информация:</strong> LinkedIn API требует верификации бизнеса. 
+    Пока используйте этот инструмент для создания постов вручную или импортируйте демо-контент.
+  </div>
 
+  <button onclick="loadDemoPosts()">🔄 Загрузить демо-посты</button>
+  <button onclick="showManualForm()">✏️ Создать пост вручную</button>
+
+  <div id="postsContainer" style="margin-top: 20px;"></div>
+  <div id="manualForm" style="display: none; margin-top: 20px;"></div>
+
+  <script>
+    async function loadDemoPosts() {
+      try {
+        const response = await fetch('/functions/linkedin-rss', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action: 'import_from_rss'
+          })
+        });
+
+        const result = await response.json();
+        
+        if (result.success) {
+          displayPosts(result.posts);
+        } else {
+          alert('Error: ' + result.error);
+        }
+      } catch (error) {
+        alert('Error: ' + error.message);
+      }
+    }
+
+    function displayPosts(posts) {
+      const container = document.getElementById('postsContainer');
+      container.innerHTML = '<h3>Доступные посты:</h3>';
+      
+      posts.forEach((post, index) => {
+        const postDiv = document.createElement('div');
+        postDiv.className = 'post';
+        postDiv.innerHTML = `
+          <h4>${post.title}</h4>
+          <p>${post.content.replace(/\n/g, '<br>')}</p>
+          <small>Дата: ${new Date(post.date).toLocaleDateString()}</small>
+          <br>
+          <button onclick="publishPost(${index})">📄 Опубликовать этот пост</button>
+        `;
+        container.appendChild(postDiv);
+      });
+    }
+
+    function showManualForm() {
+      const formDiv = document.getElementById('manualForm');
+      formDiv.style.display = 'block';
+      formDiv.innerHTML = `
+        <h3>Создать пост вручную</h3>
+        <div>
+          <label>Заголовок:</label><br>
+          <input type="text" id="manualTitle" style="width: 100%; padding: 8px; margin: 5px 0;" placeholder="Введите заголовок">
+        </div>
+        <div>
+          <label>Содержание:</label><br>
+          <textarea id="manualContent" placeholder="Введите содержание поста..."></textarea>
+        </div>
+        <button onclick="createManualPost()">✅ Создать пост</button>
+      `;
+    }
+
+    async function createManualPost() {
+      const title = document.getElementById('manualTitle').value;
+      const content = document.getElementById('manualContent').value;
+      
+      if (!title || !content) {
+        alert('Заполните все поля');
+        return;
+      }
+
+      const date = new Date().toISOString().split('T')[0];
+      const slug = title.toLowerCase().replace(/[^a-z0-9а-яё]+/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '');
+      const filename = `${date}-${slug}.md`;
+      
+      const postContent = `---
+title: "${title.replace(/"/g, '\\"')}"
+date: ${new Date().toISOString()}
+---
+${content}
+`;
+
+      // Показываем результат
+      const container = document.getElementById('postsContainer');
+      container.innerHTML = `
+        <h3>✅ Пост готов к публикации!</h3>
+        <div class="post">
+          <h4>${title}</h4>
+          <p>${content.replace(/\n/g, '<br>')}</p>
+          <p><strong>Имя файла:</strong> ${filename}</p>
+          <textarea style="width: 100%; height: 200px; margin: 10px 0;">${postContent}</textarea>
+          <br>
+          <a href="https://github.com/AleksandrPepeslavtcev/pf-ads-site/new/main/_posts" target="_blank" style="background: #2ea44f; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px;">
+            📝 Опубликовать на GitHub
+          </a>
+        </div>
+      `;
+    }
+
+    function publishPost(index) {
+      alert(`Пост ${index} будет опубликован. В реальной реализации здесь будет код для публикации через GitHub API.`);
+    }
+  </script>
+</body>
+</html>
