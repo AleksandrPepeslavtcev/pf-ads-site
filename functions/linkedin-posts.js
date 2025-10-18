@@ -6,6 +6,7 @@ export async function onRequestPost(context) {
     
     const LINKEDIN_CLIENT_ID = '77c7i4jjqp5e8g';
     const LINKEDIN_CLIENT_SECRET = 'WPL_AP1.hziPFMoFR4e7sXgs.z7dGvg==';
+    const REDIRECT_URI = 'https://www.pf-ads.com/linkedin/callback';
     
     if (action === 'get_posts') {
       // Получаем посты пользователя
