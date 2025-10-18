@@ -1,7 +1,9 @@
 backend:
   name: git-gateway
   branch: main
-  # Уберите все GitHub настройки
+
+site_url: https://pf-ads-site.netlify.app
+display_url: https://pf-ads-site.netlify.app
 
 media_folder: "assets/images/uploads"
 public_folder: "/assets/images/uploads"
