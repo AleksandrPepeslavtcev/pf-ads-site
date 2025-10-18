@@ -1,11 +1,7 @@
 backend:
-  name: github
-  repo: AleksandrPepeslavtcev/pf-ads-site
+  name: git-gateway
   branch: main
-  base_url: https://www.pf-ads.com
-  auth_scope: repo
-  app_id: "Ov23liB9OZZ7mdtgK4HL"
-  auth_endpoint: "https://www.pf-ads.com/api/auth"
+  # Уберите все GitHub настройки
 
 media_folder: "assets/images/uploads"
 public_folder: "/assets/images/uploads"
