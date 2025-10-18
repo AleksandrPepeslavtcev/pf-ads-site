@@ -1,28 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PF-ADS CMS</title>
-  <script src="https://unpkg.com/netlify-cms@^2.10.0/dist/netlify-cms.js"></script>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Content Manager</title>
+  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
 </head>
 <body>
   <script>
-    // Добавляем обработку ошибок авторизации
-    if (window.CMS) {
-      console.log('Netlify CMS loaded');
-      
-      // Обработчик для ошибок авторизации
-      window.addEventListener('message', function(event) {
-        if (event.data && event.data.type === 'authorization_error') {
-          console.error('Auth error:', event.data.error);
-          alert('Ошибка авторизации: ' + event.data.error);
-        }
-      });
-      
-      // Инициализируем CMS
-      CMS.init();
-    }
+    CMS.init();
   </script>
 </body>
 </html>
