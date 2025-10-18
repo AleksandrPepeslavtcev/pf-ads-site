@@ -4,8 +4,8 @@ export async function onRequestPost(context) {
   try {
     const { action, access_token } = await request.json();
     
-    const LINKEDIN_CLIENT_ID = '77c74jqp5e8g';
-    const LINKEDIN_CLIENT_SECRET = 'WPL_AP1.hziPFMoFR4e7sXgs';
+    const LINKEDIN_CLIENT_ID = '77c7i4jjqp5e8g';
+    const LINKEDIN_CLIENT_SECRET = 'WPL_AP1.hziPFMoFR4e7sXgs.z7dGvg==';
     
     if (action === 'get_posts') {
       // Получаем посты пользователя
