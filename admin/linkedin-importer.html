@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LinkedIn Importer - PF-ADS</title>
+  <style>
+    body { 
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+      max-width: 1000px; 
+      margin: 0 auto; 
+      padding: 20px; 
+      background: #f5f6f8;
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    .step {
+      margin-bottom: 30px;
+      padding: 20px;
+      border: 1px solid #e1e8ed;
+      border-radius: 8px;
+    }
+    .step-number {
+      background: #667eea;
+      color: white;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 10px;
+    }
+    button {
+      background: #667eea;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+      margin: 5px;
+    }
+    button:hover { background: #5a67d8; }
+    button:disabled { background: #a0aec0; cursor: not-allowed; }
+    .post-card {
+      border: 1px solid #e1e8ed;
+      border-radius: 8px;
+      padding: 15px;
+      margin: 10px 0;
+      background: #f8f9fa;
+    }
+    .post-card.selected { border-color: #667eea; background: #edf2f7; }
+    .loading { color: #667eea; }
+    .success { color: #38a169; }
+    .error { color: #e53e3e; }
+    textarea { 
+      width: 100%; 
+      height: 200px; 
+      padding: 10px; 
+      border: 1px solid #ddd; 
+      border-radius: 4px; 
+      font-family: monospace; 
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>📥 Импорт постов из LinkedIn</h1>
+    
+    <!-- Шаг 1: Авторизация -->
+    <div class="step">
+      <h3><span class="step-number">1</span> Авторизация в LinkedIn</h3>
+      <p>Получите access token для доступа к вашим постам:</p>
+      <button onclick="openLinkedInAuth()">🔗 Авторизоваться в LinkedIn</button>
+      <div style="margin-top: 15px;">
+        <label><strong>Access Token:</strong></label>
+        <input type="text" id="accessToken" placeholder="Введите ваш LinkedIn access token" 
+               style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; margin-top: 5px;">
+      </div>
+    </div>
+
+    <!-- Шаг 2: Загрузка постов -->
+    <div class="step">
+      <h3><span class="step-number">2</span> Загрузка постов</h3>
+      <button onclick="loadLinkedInPosts()" id="loadBtn">📥 Загрузить посты из LinkedIn</button>
+      <div id="postsList" style="margin-top: 15px;"></div>
+    </div>
+
+    <!-- Шаг 3: Публикация -->
+    <div class="step">
+      <h3><span class="step-number">3</span> Публикация на сайте</h3>
+      <button onclick="publishSelectedPosts()" id="publishBtn" disabled>🚀 Опубликовать выбранные посты</button>
+      <div id="publishResult" style="margin-top: 15px;"></div>
+    </div>
+  </div>
+
+  <script>
+    let loadedPosts = [];
+    let selectedPosts = [];
+
+    // Авторизация в LinkedIn
+    function openLinkedInAuth() {
+      const clientId = '77c74jqp5e8g';
+      const redirectUri = 'https://www.pf-ads.com/linkedin/callback';
+      const scope = 'r_liteprofile r_member_social w_member_social';
+      const state = Math.random().toString(36).substring(2);
+      
+      const authUrl = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scope)}&state=${state}`;
+      
+      window.open(authUrl, '_blank');
+    }
+
+    // Загрузка постов из LinkedIn
+    async function loadLinkedInPosts() {
+      const accessToken = document.getElementById('accessToken').value.trim();
+      if (!accessToken) {
+        alert('Введите access token');
+        return;
+      }
+
+      const loadBtn = document.getElementById('loadBtn');
+      loadBtn.disabled = true;
+      loadBtn.textContent = '⏳ Загрузка...';
+
+      try {
+        const response = await fetch('/functions/linkedin-posts', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            action: 'get_posts',
+            access_token: accessToken 
+          })
+        });
+
+        const result = await response.json();
+        
+        if (result.success) {
+          loadedPosts = result.posts;
+          displayPosts(loadedPosts);
+          document.getElementById('publishBtn').disabled = false;
+        } else {
+          throw new Error(result.error);
+        }
+      } catch (error) {
+        alert('Ошибка загрузки постов: ' + error.message);
+      } finally {
+        loadBtn.disabled = false;
+        loadBtn.textContent = '📥 Загрузить посты из LinkedIn';
+      }
+    }
+
+    // Отображение списка постов
+    function displayPosts(posts) {
+      const postsList = document.getElementById('postsList');
+      postsList.innerHTML = '<h4>Загруженные посты:</h4>';
+      
+      posts.forEach((post, index) => {
+        const postElement = document.createElement('div');
+        postElement.className = 'post-card';
+        postElement.innerHTML = `
+          <label style="display: block; cursor: pointer;">
+            <input type="checkbox" onchange="togglePostSelection(${index})" style="margin-right: 10px;">
+            <strong>${post.title}</strong>
+            <small style="color: #666; display: block;">${new Date(post.date).toLocaleDateString()}</small>
+            <div style="margin-top: 10px; max-height: 100px; overflow: hidden;">${post.content.substring(0, 200)}...</div>
+          </label>
+        `;
+        postsList.appendChild(postElement);
+      });
+    }
+
+    // Выбор/отмена выбора поста
+    function togglePostSelection(index) {
+      const postIndex = selectedPosts.indexOf(index);
+      if (postIndex > -1) {
+        selectedPosts.splice(postIndex, 1);
+      } else {
+        selectedPosts.push(index);
+      }
+      
+      // Обновляем стиль выбранных постов
+      const postCards = document.querySelectorAll('.post-card');
+      postCards.forEach((card, i) => {
+        if (selectedPosts.includes(i)) {
+          card.classList.add('selected');
+        } else {
+          card.classList.remove('selected');
+        }
+      });
+    }
+
+    // Публикация выбранных постов
+    async function publishSelectedPosts() {
+      if (selectedPosts.length === 0) {
+        alert('Выберите посты для публикации');
+        return;
+      }
+
+      const publishBtn = document.getElementById('publishBtn');
+      const resultDiv = document.getElementById('publishResult');
+      
+      publishBtn.disabled = true;
+      publishBtn.textContent = '⏳ Публикация...';
+      resultDiv.innerHTML = '<div class="loading">🚀 Публикация постов...</div>';
+
+      let successCount = 0;
+      let errorCount = 0;
+
+      for (const postIndex of selectedPosts) {
+        const post = loadedPosts[postIndex];
+        
+        try {
+          const filename = `${post.date.split('T')[0]}-linkedin-${post.id}.md`;
+          const postContent = `---
+title: "${post.title.replace(/"/g, '\\"')}"
+date: ${post.date}
+linkedin_url: "${post.linkedin_url}"
+source: "linkedin"
+---
+${post.content}
+`;
+
+          const response = await fetch('/functions/linkedin-posts', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              action: 'publish_post',
+              post_data: {
+                filename: filename,
+                title: post.title,
+                content: postContent
+              }
+            })
+          });
+
+          const result = await response.json();
+          
+          if (result.success) {
+            successCount++;
+            resultDiv.innerHTML += `<div class="success">✅ Опубликован: ${post.title}</div>`;
+          } else {
+            errorCount++;
+            resultDiv.innerHTML += `<div class="error">❌ Ошибка: ${post.title} - ${result.error}</div>`;
+          }
+        } catch (error) {
+          errorCount++;
+          resultDiv.innerHTML += `<div class="error">❌ Ошибка: ${post.title} - ${error.message}</div>`;
+        }
+      }
+
+      resultDiv.innerHTML += `<div class="success"><strong>✅ Готово! Успешно: ${successCount}, Ошибок: ${errorCount}</strong></div>`;
+      publishBtn.disabled = false;
+      publishBtn.textContent = '🚀 Опубликовать выбранные посты';
+    }
+  </script>
+</body>
+</html>
