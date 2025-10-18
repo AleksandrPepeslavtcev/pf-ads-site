@@ -3,7 +3,7 @@ backend:
   repo: AleksandrPepeslavtcev/pf-ads-site
   branch: main
   base_url: https://www.pf-ads.com
-  auth_type: implicit
+  auth_scope: repo
   app_id: "Ov23liB9OZZ7mdtgK4HL"
 
 media_folder: "assets/images/uploads"
@@ -18,4 +18,6 @@ collections:
     fields:
       - { label: "Title", name: "title", widget: "string" }
       - { label: "Publish Date", name: "date", widget: "datetime" }
+      - { label: "LinkedIn URL", name: "linkedin_url", widget: "string", required: false }
+      - { label: "Source", name: "source", widget: "hidden", default: "website" }
       - { label: "Body", name: "body", widget: "markdown" }
