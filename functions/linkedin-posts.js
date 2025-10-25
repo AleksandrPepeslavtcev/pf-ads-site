@@ -5,11 +5,14 @@ export async function onRequestPost(context) {
     const body = await request.json();
     const { action, code, access_token } = body;
     
-    const LINKEDIN_CLIENT_ID = '77c7i4jjqp5e8g';
-    const LINKEDIN_CLIENT_SECRET = 'WPL_AP1.hziPFMoFR4e7sXgs.z7dGvg==';
-    const REDIRECT_URI = 'https://www.pf-ads.com/linkedin/callback';
+    const LINKEDIN_CLIENT_ID = context.env.LINKEDIN_CLIENT_ID;
+    const LINKEDIN_CLIENT_SECRET = context.env.LINKEDIN_CLIENT_SECRET;
+    const REDIRECT_URI = context.env.LINKEDIN_REDIRECT_URI || 'https://www.pf-ads.com/linkedin/callback';
     
     if (action === 'get_token' && code) {
+      if (!LINKEDIN_CLIENT_ID || !LINKEDIN_CLIENT_SECRET) {
+        throw new Error('LinkedIn env not configured');
+      }
       const tokenResponse = await fetch('https://www.linkedin.com/oauth/v2/accessToken', {
         method: 'POST',
         headers: {

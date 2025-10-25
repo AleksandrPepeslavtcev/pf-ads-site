@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>News Importer - PF-ADS</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 900px; margin: 0 auto; padding: 20px; background: #f5f6f8; }
+    .card { background: #fff; padding: 24px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.06); margin: 16px 0; }
+    label { display:block; margin: 10px 0 6px; font-weight: 600; }
+    input[type=text], textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; font-family: inherit; }
+    textarea { height: 200px; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace; }
+    button { background: #2ea44f; color: #fff; border: 0; padding: 10px 16px; border-radius: 6px; cursor: pointer; }
+    button.secondary { background:#667eea; }
+    .result { background: #f8fafc; border: 1px solid #e2e8f0; padding: 10px; border-radius: 6px; font-family: monospace; white-space: pre-wrap; }
+    .hint { color:#555; font-size:.9rem; }
+  </style>
+  <script>
+    async function publishNews(){
+      const title = document.getElementById('title').value.trim();
+      const linkedin = document.getElementById('linkedin').value.trim();
+      const date = document.getElementById('date').value.trim();
+      const content = document.getElementById('content').value;
+      const btn = document.getElementById('publishBtn');
+      const out = document.getElementById('result');
+      if(!title || !content){ alert('Title and Content are required'); return; }
+      btn.disabled = true; btn.textContent = 'Publishing...';
+      try{
+        const res = await fetch('/functions/news-publish', {
+          method:'POST', headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({ title, content, date: date || undefined, linkedin_url: linkedin })
+        });
+        const json = await res.json();
+        out.textContent = JSON.stringify(json, null, 2);
+        if(json.success && json.url){ window.open(json.url, '_blank'); }
+      }catch(e){ out.textContent = 'Error: ' + e.message; }
+      finally{ btn.disabled=false; btn.textContent='Publish'; }
+    }
+  </script>
+</head>
+<body>
+  <h1>News Importer</h1>
+  <div class="card">
+    <p class="hint">Paste your LinkedIn post text or summary as HTML/Markdown and optionally provide the LinkedIn post URL. The tool will create a page under <code>/news/</code> and update the news index.</p>
+    <label>Title</label>
+    <input type="text" id="title" placeholder="Post title">
+    <label>LinkedIn URL (optional)</label>
+    <input type="text" id="linkedin" placeholder="https://www.linkedin.com/feed/update/...">
+    <label>Date (optional, ISO)</label>
+    <input type="text" id="date" placeholder="2025-01-31T10:00:00Z">
+    <label>Content (HTML or Markdown)</label>
+    <textarea id="content" placeholder="<p>Your content here...</p>"></textarea>
+    <div style="margin-top:12px">
+      <button id="publishBtn" onclick="publishNews()">Publish</button>
+    </div>
+  </div>
+  <div class="card">
+    <div id="result" class="result"></div>
+  </div>
+
+  <h2>Advanced: Import from LinkedIn Organization</h2>
+  <div class="card">
+    <p class="hint">Requires a valid LinkedIn user access token with <code>r_organization_social</code> for your organization. Paste the token and your <code>org_id</code> (numeric). You can obtain an auth code via the existing LinkedIn OAuth demo pages, then exchange to an access token using the function already in this repo.</p>
+    <label>Access Token</label>
+    <input type="text" id="lk_token" placeholder="eyJhbGciOi...">
+    <label>Organization ID</label>
+    <input type="text" id="lk_org" placeholder="123456789">
+    <div style="margin:12px 0">
+      <button class="secondary" onclick="loadOrgPosts()">Load Org Posts</button>
+    </div>
+    <div id="orgPosts"></div>
+  </div>
+
+  <script>
+    async function loadOrgPosts(){
+      const token = document.getElementById('lk_token').value.trim();
+      const org = document.getElementById('lk_org').value.trim();
+      const box = document.getElementById('orgPosts');
+      if(!token || !org){ alert('Token and org_id required'); return; }
+      box.innerHTML = 'Loading...';
+      try{
+        const res = await fetch('/functions/linkedin-org-posts', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ action:'get_posts', access_token: token, org_id: org }) });
+        const js = await res.json();
+        if(!js.success){ box.textContent = 'Error: ' + (js.error||'failed'); return; }
+        if(!js.posts || js.posts.length===0){ box.textContent='No posts found.'; return; }
+        box.innerHTML = js.posts.map((p,i)=>`
+          <div class="card">
+            <h3>${escapeHtml(p.title)}</h3>
+            <div class="hint">${new Date(p.date).toLocaleString()} · <a href="${p.linkedin_url}" target="_blank">LinkedIn</a></div>
+            <div>${p.content}</div>
+            <div style="margin-top:8px">
+              <button onclick='publishFromOrg(${JSON.stringify(p)})'>Publish</button>
+            </div>
+          </div>
+        `).join('');
+      }catch(e){ box.textContent = 'Error: ' + e.message; }
+    }
+    async function publishFromOrg(p){
+      try{
+        const res = await fetch('/functions/news-publish', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ title: p.title, content: p.content, date: p.date, linkedin_url: p.linkedin_url, source:'LinkedIn' }) });
+        const js = await res.json();
+        alert(js.success ? 'Published: ' + js.url : ('Error: ' + js.error));
+      }catch(e){ alert('Error: ' + e.message); }
+    }
+    function escapeHtml(s){ return String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c])); }
+  </script>
+</body>
+</html>

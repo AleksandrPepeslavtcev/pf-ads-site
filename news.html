@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>News | PF ADS</title>
+<meta name="description" content="Company news and LinkedIn posts imported to the site">
+<link rel="icon" type="image/png" href="./assets/favicon-32.png" sizes="32x32">
+<link rel="icon" type="image/png" href="./assets/favicon-48.png" sizes="48x48">
+<link rel="apple-touch-icon" href="./assets/icon-192.png">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="canonical" href="https://www.pf-ads.com/news.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="News | PF ADS">
+<meta property="og:description" content="Company news and LinkedIn posts imported to the site">
+<meta property="og:image" content="/images/banner.png">
+<meta property="og:url" content="https://www.pf-ads.com/news.html">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="stylesheet" href="./styles.css">
+<script src="./sw-register.js" defer></script>
+<style>
+  .news-list{max-width:1000px;margin:0 auto;padding:0}
+  .news-item{background:var(--card);border:1px solid #e1e1e1;border-radius:14px;padding:18px;margin:12px 0}
+  .news-item h3{margin:0 0 8px}
+  .news-item .meta{color:#666;font-size:.9rem;margin-bottom:8px}
+  .news-item a.more{color:var(--accent)}
+  .empty{color:#666;text-align:center;margin:40px 0}
+</style>
+</head>
+<body>
+  <div class="nav container">
+    <div class="brand">
+      <img src="./images/logo.png" alt="PF ADS logo"><div></div>
+    </div>
+    <div style="display:flex;gap:16px">
+      <a href="./index.html">Home</a>
+      <a href="./news.html">News</a>
+      <a href="./matrix.html">Evaluation Matrix</a>
+      <a href="./contact.html">Contact</a>
+    </div>
+  </div>
+  <div class='container'>
+    <div class="hero">
+      <img src="./images/banner.png" alt="News banner">
+      <div class="hero-content">
+        <span class="badge">Updates</span>
+        <h1>Company News</h1>
+        <p>Latest updates and LinkedIn posts mirrored to our site.</p>
+      </div>
+    </div>
+    <section class="news-list" id="newsList"></section>
+  </div>
+  <div class='footer container'>© 2025 PF Automation & Digital Solution · <a href='mailto:info@pf-ads.com'>info@pf-ads.com</a> · +358-50-430-1138</div>
+  <script>
+    async function loadNews(){
+      const el=document.getElementById('newsList');
+      try{
+        const res=await fetch('/news/index.json',{cache:'no-store'});
+        if(!res.ok) throw new Error('Failed to load index');
+        const items=await res.json();
+        if(!Array.isArray(items)||items.length===0){
+          el.innerHTML = '<p class="empty">No posts yet.</p>';
+          return;
+        }
+        items.sort((a,b)=>new Date(b.date)-new Date(a.date));
+        el.innerHTML = items.map(i=>`
+          <article class="news-item">
+            <h3><a href="${i.url}">${i.title}</a></h3>
+            <div class="meta">${new Date(i.date).toLocaleDateString()}${i.source?` · ${i.source}`:''}${i.linkedin_url?` · <a href="${i.linkedin_url}" target="_blank" rel="noopener">LinkedIn</a>`:''}</div>
+            <p>${(i.excerpt||'').replace(/</g,'&lt;')}</p>
+            <a class="more" href="${i.url}">Read more →</a>
+          </article>
+        `).join('');
+      }catch(e){
+        el.innerHTML = '<p class="empty">Failed to load posts.</p>';
+      }
+    }
+    loadNews();
+  </script>
+</body>
+</html>
+
