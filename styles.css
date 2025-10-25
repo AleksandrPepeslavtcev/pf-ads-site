@@ -48,7 +48,7 @@ a:hover{color:#333 !important; text-decoration:underline !important;}
 /* --- Global responsive helpers --- */
 img{max-width:100%;height:auto}
 .nav-links{display:flex;gap:16px}
-.menu-toggle{display:none;align-items:center;gap:8px;background:transparent;border:1px solid #ccc;padding:8px 10px;border-radius:8px;color:#111}
+.menu-toggle{display:none;align-items:center;gap:8px;background:rgba(255,255,255,0.85);border:1px solid #bbb;padding:8px 12px;border-radius:8px;color:#111}
 .menu-toggle:focus{outline:2px solid #009fdc;outline-offset:2px}
 .table-responsive{overflow-x:auto;-webkit-overflow-scrolling:touch}
 
@@ -59,6 +59,7 @@ img{max-width:100%;height:auto}
   .hero-content{padding:16px}
   .hero h1{font-size:1.6rem}
   .hero p{font-size:.95rem;max-width:100%}
+  .hero img{height:240px;object-fit:cover}
   .btn{width:100%;justify-content:center}
   .grid{gap:12px}
   .card img{height:120px}
