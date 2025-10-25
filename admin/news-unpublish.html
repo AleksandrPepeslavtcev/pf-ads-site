@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Unpublish News - PF ADS</title>
+  <style>
+    :root{ --bg:#f5f6f8; --card:#fff; --b:#e2e8f0; --txt:#111; --muted:#555; }
+    body{ font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif; background:var(--bg); margin:0; padding:24px; color:var(--txt); }
+    .card{ background:var(--card); border:1px solid var(--b); border-radius:12px; padding:20px; max-width:900px; margin:0 auto 16px; }
+    label{ font-weight:600; display:block; margin:8px 0 6px; }
+    input[type=text]{ width:100%; padding:10px; border:1px solid var(--b); border-radius:8px; }
+    .row{ display:flex; gap:12px; align-items:center; flex-wrap:wrap; }
+    button{ background:#e11d48; color:#fff; border:0; padding:10px 14px; border-radius:8px; cursor:pointer; }
+    button.secondary{ background:#2563eb; }
+    button:disabled{ opacity:.6; cursor:not-allowed; }
+    .muted{ color:var(--muted); font-size:.9rem; }
+    .result{ white-space:pre-wrap; font-family:ui-monospace,Consolas,Menlo,monospace; background:#f8fafc; border:1px solid var(--b); border-radius:8px; padding:10px; margin-top:10px; }
+    table{ width:100%; border-collapse:collapse; }
+    th,td{ border:1px solid var(--b); padding:8px; text-align:left; }
+    th{ background:#f1f5f9; }
+  </style>
+  <script>
+    async function unpublish(){
+      const url = document.getElementById('url').value.trim();
+      const token = document.getElementById('token').value.trim();
+      const out = document.getElementById('out');
+      if(!url){ alert('Укажите URL или путь статьи'); return; }
+      out.textContent = 'Удаление...';
+      try{
+        const res = await fetch('/news-delete', {
+          method:'POST',
+          headers: Object.assign({'Content-Type':'application/json'}, token?{'Authorization':'Bearer '+token}:{}) ,
+          body: JSON.stringify({ url })
+        });
+        const js = await res.json();
+        out.textContent = JSON.stringify(js, null, 2);
+        if(js.success){
+          await loadList();
+        }
+      }catch(e){
+        out.textContent = 'Error: ' + e.message;
+      }
+    }
+
+    async function loadList(){
+      const box = document.getElementById('list');
+      box.innerHTML = 'Загрузка списка...';
+      try{
+        const res = await fetch('/news/index.json', { cache:'no-store' });
+        if(!res.ok){ box.textContent = 'Не удалось загрузить index.json'; return; }
+        const arr = await res.json();
+        if(!Array.isArray(arr) || arr.length===0){ box.textContent = 'Список пуст'; return; }
+        box.innerHTML = `<table><thead><tr><th>Дата</th><th>Заголовок</th><th>URL</th><th></th></tr></thead><tbody>` +
+          arr.map(i=>`<tr>
+            <td>${new Date(i.date||Date.now()).toLocaleString()}</td>
+            <td>${escapeHtml(i.title||'')}</td>
+            <td><a href="${i.url}" target="_blank">${i.url}</a></td>
+            <td><button onclick="quickDelete('${i.url.replace(/'/g, "&#39;")}')">Unpublish</button></td>
+          </tr>`).join('') + `</tbody></table>`;
+      }catch(e){ box.textContent = 'Error: ' + e.message; }
+    }
+
+    async function quickDelete(url){
+      document.getElementById('url').value = url;
+      await unpublish();
+    }
+
+    function escapeHtml(s){
+      return String(s).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c]));
+    }
+
+    window.addEventListener('DOMContentLoaded', loadList);
+  </script>
+</head>
+<body>
+  <div class="card">
+    <h1>Unpublish News</h1>
+    <p class="muted">Удаляет HTML‑страницу под <code>/news/</code> и запись из <code>/news/index.json</code> через endpoint <code>/news-delete</code>.</p>
+    <label>URL или путь статьи</label>
+    <input id="url" type="text" placeholder="Напр.: /news/2025-10-25-test.html или 2025-10-25-test.html" />
+    <div class="row" style="margin-top:10px">
+      <button onclick="unpublish()">Unpublish</button>
+      <button class="secondary" onclick="loadList()">Обновить список</button>
+      <span class="muted">Если настроен токен — укажите его ниже.</span>
+    </div>
+    <label style="margin-top:10px">Админ‑токен (если задан NEWS_ADMIN_TOKEN)</label>
+    <input id="token" type="text" placeholder="Bearer токен (опционально)" />
+    <div id="out" class="result"></div>
+  </div>
+
+  <div class="card">
+    <h2>Текущие публикации</h2>
+    <div id="list">Загрузка...</div>
+  </div>
+</body>
+</html>
+
