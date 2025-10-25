@@ -55,7 +55,7 @@ export async function onRequestPost(context) {
     try {
       const current = await githubGetFile({ repo, path: indexPath, token: env.GITHUB_TOKEN, branch });
       if (current && current.content) {
-        const decoded = JSON.parse(Buffer.from(current.content, 'base64').toString('utf8'));
+        const decoded = JSON.parse(fromBase64Utf8(current.content));
         if (Array.isArray(decoded)) entries = decoded;
       }
     } catch (_) { /* ignore if index.json not found yet */ }
@@ -81,6 +81,24 @@ export async function onRequestPost(context) {
   } catch (err) {
     return json({ success: false, error: err.message, stack: err.stack }, 500);
   }
+}
+
+// --- Web base64 helpers (no Node Buffer required) ---
+function toBase64Utf8(input){
+  const bytes = new TextEncoder().encode(String(input));
+  let binary = '';
+  const CHUNK = 0x8000;
+  for (let i = 0; i < bytes.length; i += CHUNK) {
+    const sub = bytes.subarray(i, i + CHUNK);
+    binary += String.fromCharCode.apply(null, sub);
+  }
+  return btoa(binary);
+}
+function fromBase64Utf8(b64){
+  const bin = atob(b64 || '');
+  const bytes = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+  return new TextDecoder().decode(bytes);
 }
 
 function buildNewsHtml({ title, content, date, linkedin_url }) {
@@ -154,7 +172,7 @@ async function githubPutFile({ repo, branch, path, content, token, message }) {
     },
     body: JSON.stringify({
       message: message || `update ${path}`,
-      content: Buffer.from(typeof content === 'string' ? content : String(content)).toString('base64'),
+      content: toBase64Utf8(typeof content === 'string' ? content : String(content)),
       branch,
       ...(sha ? { sha } : {})
     })
@@ -175,4 +193,3 @@ async function githubGetFile({ repo, path, token, branch }) {
 function json(obj, status=200) {
   return new Response(JSON.stringify(obj), { status, headers: { 'Content-Type': 'application/json' } });
 }
-

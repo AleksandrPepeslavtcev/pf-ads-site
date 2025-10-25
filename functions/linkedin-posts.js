@@ -129,7 +129,7 @@ export async function onRequestPost(context) {
           },
           body: JSON.stringify({
             message: `Import from LinkedIn: ${post_data.title}`,
-            content: Buffer.from(post_data.content).toString('base64'),
+            content: toBase64Utf8(post_data.content),
             branch: 'main'
           })
         }
@@ -162,6 +162,18 @@ export async function onRequestPost(context) {
       headers: { 'Content-Type': 'application/json' }
     });
   }
+}
+
+// --- Web base64 helper (no Node Buffer) ---
+function toBase64Utf8(input){
+  const bytes = new TextEncoder().encode(String(input));
+  let binary = '';
+  const CHUNK = 0x8000;
+  for (let i = 0; i < bytes.length; i += CHUNK) {
+    const sub = bytes.subarray(i, i + CHUNK);
+    binary += String.fromCharCode.apply(null, sub);
+  }
+  return btoa(binary);
 }
 
 // Вспомогательные функции
