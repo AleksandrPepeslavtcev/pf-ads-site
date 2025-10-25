@@ -34,7 +34,8 @@ export async function onRequestPost(context) {
     const pagePath = `news/${filename}`;
     const pageUrl = `/news/${filename}`;
 
-    const pageHtml = buildNewsHtml({ title, content, date: d.toISOString(), linkedin_url });
+    const contentHtml = renderContent(content);
+    const pageHtml = buildNewsHtml({ title, content: contentHtml, date: d.toISOString(), linkedin_url });
 
     const repo = env.GITHUB_REPO || 'AleksandrPepeslavtcev/pf-ads-site';
     const branch = env.GITHUB_BRANCH || 'main';
@@ -145,6 +146,17 @@ function buildNewsHtml({ title, content, date, linkedin_url }) {
   </div>
   <div class='footer container'>© 2025 PF Automation & Digital Solution · <a href='mailto:info@pf-ads.com'>info@pf-ads.com</a> · +358-50-430-1138</div>
 </body></html>`;
+}
+
+// Render plain text/Markdown-ish into HTML paragraphs if no HTML tags present
+function renderContent(raw){
+  const s = String(raw || '').trim();
+  // If it already looks like HTML (has a tag), return as is
+  if (/<[a-z][\s\S]*>/i.test(s)) return s;
+  // Escape and convert blank-line separated paragraphs
+  const esc = s.replace(/[&<>]/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;' }[c]));
+  const paras = esc.split(/\r?\n\s*\r?\n/g).map(p=>`<p>${p.replace(/\r?\n/g,'<br>')}</p>`);
+  return paras.join('\n');
 }
 
 function escapeHtml(s) {
