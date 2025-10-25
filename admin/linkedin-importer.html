@@ -128,7 +128,7 @@
       loadBtn.textContent = '⏳ Загрузка...';
 
       try {
-        const response = await fetch('/functions/linkedin-posts', {
+        const response = await fetch('/linkedin-posts', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ 
@@ -225,7 +225,7 @@ source: "linkedin"
 ${post.content}
 `;
 
-          const response = await fetch('/functions/linkedin-posts', {
+          const response = await fetch('/linkedin-posts', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({

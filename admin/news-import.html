@@ -26,7 +26,7 @@
       if(!title || !content){ alert('Title and Content are required'); return; }
       btn.disabled = true; btn.textContent = 'Publishing...';
       try{
-        const res = await fetch('/functions/news-publish', {
+        const res = await fetch('/news-publish', {
           method:'POST', headers:{'Content-Type':'application/json'},
           body: JSON.stringify({ title, content, date: date || undefined, linkedin_url: linkedin })
         });
@@ -79,7 +79,7 @@
       if(!token || !org){ alert('Token and org_id required'); return; }
       box.innerHTML = 'Loading...';
       try{
-        const res = await fetch('/functions/linkedin-org-posts', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ action:'get_posts', access_token: token, org_id: org }) });
+        const res = await fetch('/linkedin-org-posts', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ action:'get_posts', access_token: token, org_id: org }) });
         const js = await res.json();
         if(!js.success){ box.textContent = 'Error: ' + (js.error||'failed'); return; }
         if(!js.posts || js.posts.length===0){ box.textContent='No posts found.'; return; }
@@ -97,7 +97,7 @@
     }
     async function publishFromOrg(p){
       try{
-        const res = await fetch('/functions/news-publish', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ title: p.title, content: p.content, date: p.date, linkedin_url: p.linkedin_url, source:'LinkedIn' }) });
+        const res = await fetch('/news-publish', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ title: p.title, content: p.content, date: p.date, linkedin_url: p.linkedin_url, source:'LinkedIn' }) });
         const js = await res.json();
         alert(js.success ? 'Published: ' + js.url : ('Error: ' + js.error));
       }catch(e){ alert('Error: ' + e.message); }

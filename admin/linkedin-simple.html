@@ -76,7 +76,7 @@
       btn.textContent = 'Getting token...';
 
       try {
-        const response = await fetch('/functions/linkedin-posts', {
+        const response = await fetch('/linkedin-posts', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
