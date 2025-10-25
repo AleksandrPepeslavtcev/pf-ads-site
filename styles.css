@@ -45,6 +45,31 @@ a:hover{color:#333 !important; text-decoration:underline !important;}
 .card .more{color:#000 !important;}
 .card .more:hover{color:#333 !important;}
 
+/* --- Global responsive helpers --- */
+img{max-width:100%;height:auto}
+.nav-links{display:flex;gap:16px}
+.menu-toggle{display:none;align-items:center;gap:8px;background:transparent;border:1px solid #ccc;padding:8px 10px;border-radius:8px;color:#111}
+.menu-toggle:focus{outline:2px solid #009fdc;outline-offset:2px}
+.table-responsive{overflow-x:auto;-webkit-overflow-scrolling:touch}
+
+/* --- Mobile adjustments --- */
+@media(max-width: 700px){
+  .container{padding:16px}
+  .brand img{height:48px}
+  .hero-content{padding:16px}
+  .hero h1{font-size:1.6rem}
+  .hero p{font-size:.95rem;max-width:100%}
+  .btn{width:100%;justify-content:center}
+  .grid{gap:12px}
+  .card img{height:120px}
+
+  /* Nav: collapse into a toggle */
+  .nav{gap:12px}
+  .menu-toggle{display:inline-flex}
+  .nav-links{display:none;flex-direction:column;width:100%;padding-top:8px}
+  .nav-links.open{display:flex}
+}
+
 .card, .section, .footer {
   background: linear-gradient(to right, rgba(30,144,255,0.15), rgba(205,133,63,0.15));
 }

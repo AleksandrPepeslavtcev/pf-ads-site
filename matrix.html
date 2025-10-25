@@ -15,23 +15,26 @@
 <meta name="twitter:card" content="summary_large_image">
 <link rel="stylesheet" href="./styles.css">
 <script src="./sw-register.js" defer></script>
+<script src="./menu.js" defer></script>
 </head><body>
     <div class="nav container">
       <div class="brand">
         <img src="./images/logo.png" alt="PF ADS logo"><div></div>
       </div>
-      <div style="display:flex;gap:16px">
+      <button class="menu-toggle" aria-controls="primary-nav" aria-expanded="false">Menu</button>
+      <nav class="nav-links" id="primary-nav">
         <a href="./index.html">Home</a>
         <a href="./news.html">News</a>
         <a href="./matrix.html">Evaluation Matrix</a>
         <a href="./contact.html">Contact</a>
-      </div>
+      </nav>
     </div>
     <div class='container'>
 <div class="hero"><img src="./images/5.png"><div class="hero-content">
 <span class="badge">Methods</span><h1>Vendor-neutral Bid Evaluation Matrix</h1><p>Transparent, repeatable criteria to score proposals.</p>
 </div></div>
 <section class="section">
+<div class="table-responsive">
 <table class="table">
 <thead><tr><th>#</th><th>Criterion</th><th>Weight %</th><th>Description</th></tr></thead>
 <tbody>
@@ -47,6 +50,7 @@
 <tr><td>10</td><td>Innovation & roadmap</td><td>5</td><td>AI/APC/Analytics potential</td></tr>
 </tbody>
 </table>
+</div>
 </section>
 <p><a href="./index.html">← Back to Home</a></p>
 </div><div class='footer container'>© 2025 PF Automation & Digital Solution · <a href='mailto:info@pf-ads.com'>info@pf-ads.com</a>  +358-50-430-1138</div></body></html>
