@@ -33,17 +33,32 @@
     <div class='container'>
 <div class="hero"><img src="./images/5.png"><div class="hero-content">
 <span class="badge">Let's talk</span><h1>Contact</h1></div></div>
-<section class="section"><p>t: +358-50-430-1138, Email: <a href="mailto:info@pf-ads.com">info@pf-ads.com</a></p></section>
-<!-- Calendly badge widget begin -->
-<link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
+<section class="section">
+  <div style="display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;">
+    <p style="margin:0">t: +358-50-430-1138, Email: <a href="mailto:info@pf-ads.com">info@pf-ads.com</a></p>
+    <div class="contact-cta">
+      <button class="btn" id="calendlyBtn" type="button">Schedule first meeting</button>
+    </div>
+  </div>
+</section>
+<!-- Calendly popup widget begin -->
 <script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript" async></script>
-<script type="text/javascript">
+<script>
   window.addEventListener('load', function(){
-    if (window.Calendly && typeof Calendly.initBadgeWidget === 'function') {
-      Calendly.initBadgeWidget({ url: 'https://calendly.com/aleksandr-pereslavtcev/new-meeting', text: 'Schedule first meeting', color: '#ff8c00', textColor: '#ffffff', branding: true });
-    }
+    var btn = document.getElementById('calendlyBtn');
+    if(!btn) return;
+    btn.addEventListener('click', function(e){
+      e.preventDefault();
+      if (window.Calendly && typeof Calendly.initPopupWidget === 'function') {
+        Calendly.initPopupWidget({ url: 'https://calendly.com/aleksandr-pereslavtcev/new-meeting' });
+      }
+    });
   });
 </script>
-<!-- Calendly badge widget end -->
+<style>
+  .contact-cta{ display:flex; justify-content:flex-end; }
+  @media(max-width:700px){ .contact-cta{ width:100%; justify-content:stretch; } #calendlyBtn{ width:100%; } }
+</style>
+<!-- Calendly popup widget end -->
 <p><a href="./index.html">← Back to Home</a></p>
 </div><div class='footer container'>© 2025 PF Automation & Digital Solution · <a href='mailto:info@pf-ads.com'>info@pf-ads.com</a> +358-50-430-1138</div></body></html>
