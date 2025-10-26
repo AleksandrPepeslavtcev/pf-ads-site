@@ -1,0 +1,19 @@
+# Ignore Windows reserved device names (prevent add errors on Windows)
+CON
+CON.*
+PRN
+PRN.*
+AUX
+AUX.*
+NUL
+NUL.*
+COM[1-9]
+COM[1-9].*
+LPT[1-9]
+LPT[1-9].*
+
+# Common noise
+Thumbs.db
+Desktop.ini
+.DS_Store
+*.log

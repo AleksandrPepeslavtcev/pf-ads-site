@@ -1,0 +1,28 @@
+## Enforce LF line endings for all text files in the repo
+* text=auto eol=lf
+
+## Treat common binary formats as binary (no EOL conversions)
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.ico  binary
+*.webp binary
+*.avif binary
+*.bmp  binary
+*.svg  binary
+*.zip  binary
+*.tar  binary
+*.gz   binary
+*.7z   binary
+*.pdf  binary
+*.woff binary
+*.woff2 binary
+*.eot  binary
+*.ttf  binary
+*.otf  binary
+
+## If you ever add Windows shell scripts, keep CRLF for them
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
