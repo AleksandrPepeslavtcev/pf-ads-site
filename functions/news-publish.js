@@ -12,7 +12,7 @@ export async function onRequestPost(context) {
     }
 
     const body = await request.json();
-    const { title, content, date, linkedin_url, source = 'LinkedIn' } = body || {};
+    const { title, content, date, linkedin_url, source = 'LinkedIn', image_base64, image_mime, image_alt } = body || {};
     if (!title || !content) {
       return json({ success: false, error: 'title and content are required' }, 400);
     }
@@ -34,11 +34,29 @@ export async function onRequestPost(context) {
     const pagePath = `news/${filename}`;
     const pageUrl = `/news/${filename}`;
 
-    const contentHtml = renderContent(content);
-    const pageHtml = buildNewsHtml({ title, content: contentHtml, date: d.toISOString(), linkedin_url });
-
     const repo = env.GITHUB_REPO || 'AleksandrPepeslavtcev/pf-ads-site';
     const branch = env.GITHUB_BRANCH || 'main';
+
+    // Optional: upload image if provided as base64
+    let uploadedImageUrl = '';
+    if (image_base64 && typeof image_base64 === 'string') {
+      const ext = extFromMime(image_mime);
+      const imgName = `${dateStr}-${slug}.${ext}`;
+      const imgPath = `assets/images/uploads/news/${imgName}`;
+      await githubPutFile({
+        repo,
+        branch,
+        path: imgPath,
+        content: image_base64,
+        token: env.GITHUB_TOKEN,
+        message: `Image for news: ${title}`,
+        isBase64: true,
+      });
+      uploadedImageUrl = `/${imgPath}`;
+    }
+
+    const contentHtml = renderContent(content);
+    const pageHtml = buildNewsHtml({ title, content: contentHtml, date: d.toISOString(), linkedin_url, image_url: uploadedImageUrl, image_alt });
 
     // 1) Create/replace the news HTML page
     await githubPutFile({
@@ -102,7 +120,7 @@ function fromBase64Utf8(b64){
   return new TextDecoder().decode(bytes);
 }
 
-function buildNewsHtml({ title, content, date, linkedin_url }) {
+function buildNewsHtml({ title, content, date, linkedin_url, image_url, image_alt }) {
   const safeTitle = escapeHtml(title || '');
   const byline = [new Date(date || Date.now()).toLocaleDateString('en-US'), linkedin_url ? `<a href="${escapeAttr(linkedin_url)}" target="_blank" rel="noopener">LinkedIn</a>` : '']
     .filter(Boolean)
@@ -119,7 +137,7 @@ function buildNewsHtml({ title, content, date, linkedin_url }) {
 <meta property="og:type" content="article">
 <meta property="og:title" content="${safeTitle}">
 <meta property="og:description" content="${safeTitle}">
-<meta property="og:image" content="/images/banner.png">
+<meta property="og:image" content="${image_url ? escapeAttr(image_url) : '/images/banner.png'}">
 <link rel="stylesheet" href="/styles.css">
 </head><body>
   <div class="nav container">
@@ -140,6 +158,7 @@ function buildNewsHtml({ title, content, date, linkedin_url }) {
       <p>${byline}</p>
     </div></div>
     <section class="section">
+      ${image_url ? `<figure><img src="${escapeAttr(image_url)}" alt="${escapeAttr(image_alt || safeTitle)}" class="post-image"></figure>` : ''}
       ${content}
     </section>
     <p><a href="/news.html">← Back to News</a></p>
@@ -164,7 +183,7 @@ function escapeHtml(s) {
 }
 function escapeAttr(s) { return escapeHtml(s).replace(/"/g, '&quot;'); }
 
-async function githubPutFile({ repo, branch, path, content, token, message }) {
+async function githubPutFile({ repo, branch, path, content, token, message, isBase64 }) {
   const url = `https://api.github.com/repos/${repo}/contents/${encodeURIComponent(path)}`;
   // Fetch existing sha if present
   let sha;
@@ -184,7 +203,7 @@ async function githubPutFile({ repo, branch, path, content, token, message }) {
     },
     body: JSON.stringify({
       message: message || `update ${path}`,
-      content: toBase64Utf8(typeof content === 'string' ? content : String(content)),
+      content: isBase64 ? content : toBase64Utf8(typeof content === 'string' ? content : String(content)),
       branch,
       ...(sha ? { sha } : {})
     })
@@ -200,6 +219,24 @@ async function githubGetFile({ repo, path, token, branch }) {
   const res = await fetch(url, { headers: { 'Authorization': `token ${token}`, 'User-Agent': 'PF-ADS-Site' } });
   if (!res.ok) throw new Error(`GitHub GET ${path} failed: ${res.status}`);
   return res.json();
+}
+
+function extFromMime(m) {
+  switch (String(m||'').toLowerCase()) {
+    case 'image/jpeg':
+    case 'image/jpg':
+      return 'jpg';
+    case 'image/png':
+      return 'png';
+    case 'image/webp':
+      return 'webp';
+    case 'image/gif':
+      return 'gif';
+    case 'image/svg+xml':
+      return 'svg';
+    default:
+      return 'png';
+  }
 }
 
 function json(obj, status=200) {

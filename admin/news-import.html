@@ -21,14 +21,21 @@
       const linkedin = document.getElementById('linkedin').value.trim();
       const date = document.getElementById('date').value.trim();
       const content = document.getElementById('content').value;
+      const imageFile = (document.getElementById('image')||{}).files ? document.getElementById('image').files[0] : null;
+      const imageAlt = (document.getElementById('imageAlt')||{}).value ? document.getElementById('imageAlt').value.trim() : '';
       const btn = document.getElementById('publishBtn');
       const out = document.getElementById('result');
       if(!title || !content){ alert('Title and Content are required'); return; }
       btn.disabled = true; btn.textContent = 'Publishing...';
       try{
+        let image_base64, image_mime;
+        if(imageFile){
+          const data = await readFileAsBase64(imageFile);
+          image_base64 = data.base64; image_mime = data.mime;
+        }
         const res = await fetch('/news-publish', {
           method:'POST', headers:{'Content-Type':'application/json'},
-          body: JSON.stringify({ title, content, date: date || undefined, linkedin_url: linkedin })
+          body: JSON.stringify({ title, content, date: date || undefined, linkedin_url: linkedin, image_base64, image_mime, image_alt: imageAlt || undefined })
         });
         const json = await res.json();
         out.textContent = JSON.stringify(json, null, 2);
@@ -36,18 +43,36 @@
       }catch(e){ out.textContent = 'Error: ' + e.message; }
       finally{ btn.disabled=false; btn.textContent='Publish'; }
     }
+
+    function readFileAsBase64(file){
+      return new Promise((resolve, reject)=>{
+        const fr = new FileReader();
+        fr.onerror = ()=>reject(new Error('Failed to read file'));
+        fr.onload = ()=>{
+          const result = String(fr.result||'');
+          const m = result.match(/^data:([^;]+);base64,(.*)$/);
+          if(!m) return reject(new Error('Unsupported image format'));
+          resolve({ mime: m[1], base64: m[2] });
+        };
+        fr.readAsDataURL(file);
+      });
+    }
   </script>
 </head>
 <body>
   <h1>News Importer</h1>
   <div class="card">
-    <p class="hint">Paste your LinkedIn post text or summary as HTML/Markdown and optionally provide the LinkedIn post URL. The tool will create a page under <code>/news/</code> and update the news index.</p>
+    <p class="hint">Paste your LinkedIn post text or summary as HTML/Markdown and optionally provide the LinkedIn post URL. You can also attach an image to appear inside the post (not on the list page). The tool will create a page under <code>/news/</code> and update the news index.</p>
     <label>Title</label>
     <input type="text" id="title" placeholder="Post title">
     <label>LinkedIn URL (optional)</label>
     <input type="text" id="linkedin" placeholder="https://www.linkedin.com/feed/update/...">
     <label>Date (optional, ISO)</label>
     <input type="text" id="date" placeholder="2025-01-31T10:00:00Z">
+    <label>Image (optional)</label>
+    <input type="file" id="image" accept="image/*">
+    <label>Image alt (optional)</label>
+    <input type="text" id="imageAlt" placeholder="Short description for accessibility">
     <label>Content (HTML or Markdown)</label>
     <textarea id="content" placeholder="<p>Your content here...</p>"></textarea>
     <div style="margin-top:12px">
