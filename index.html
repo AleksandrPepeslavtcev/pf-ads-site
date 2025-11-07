@@ -78,6 +78,27 @@
     <section class="section" id="latestNews" style="max-width:1000px;margin:30px auto">
       <h2 style="margin:0 0 12px 0">Latest News</h2>
       <div id="latestNewsList">Loading...</div>
+    </section>
+    <script>
+      (function(){
+        fetch('/news/index.json',{cache:'no-store'})
+          .then(r=>r.ok?r.json():[])
+          .then(items=>{
+            const box=document.getElementById('latestNewsList');
+            if(!Array.isArray(items)||items.length===0){
+              box.textContent='No posts yet.';
+              return;
+            }
+            items.sort((a,b)=>new Date(b.date)-new Date(a.date));
+            const top = items.slice(0,3);
+            box.innerHTML = '<ul style="padding-left:18px;margin:0">'+
+              top.map(i=>`<li><a href="${i.url}">${i.title}</a> <span style="color:#666">(${new Date(i.date).toLocaleDateString()})</span></li>`).join('')+
+              '</ul>';
+          })
+          .catch(()=>{ var box=document.getElementById('latestNewsList'); if(box) box.textContent=''; });
+      })();
+    </script>
+  </div>
   <div class='footer container'>&copy; 2025 PF Automation & Digital Solutions &middot; <a href='mailto:info@pf-ads.com'>info@pf-ads.com</a> &middot; +358-50-430-1138</div>
 </body>
 </html>
