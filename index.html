@@ -18,6 +18,8 @@
   <meta name="twitter:card" content="summary_large_image">
   
   <link rel="stylesheet" href="/styles.css">
+  <link rel="preload" as="image" href="/images/banner.png" imagesrcset="/images/banner.png 1x">
+  <link rel="preload" as="fetch" href="/news/index.json" crossorigin>
   <script src="/sw-register.js" defer></script>
   <script src="/menu.js" defer></script>
   <style>
@@ -40,7 +42,7 @@
   </div>
   <div class='container'>
     <div class="hero">
-      <img src="/images/banner.png" alt="Industrial automation banner">
+      <img src="/images/banner.png" alt="Industrial automation banner" fetchpriority="high" decoding="async">
       <div class="hero-content">
         <span class="badge">Independent Automation & Digitalization Solution</span>
         <h1>PF Automation & Digital Solutions</h1>
@@ -50,25 +52,25 @@
     </div>
     <section class="grid">
       <article class="card">
-        <img src="/images/1.png" alt="Audit">
+        <img src="/images/1.png" alt="Audit" loading="lazy" decoding="async">
         <h3>1) Independent Audit of Automation & Digitalization</h3>
         <p>Assess current DCS/PLC/SCADA/MES and digital infrastructure. Identify bottlenecks and modernization potential with a 3-5 year roadmap.</p>
         <a class="more" href="/package1">Learn more &raquo;</a>
       </article>
       <article class="card">
-        <img src="/images/2.png" alt="Tender">
+        <img src="/images/2.png" alt="Tender" loading="lazy" decoding="async">
         <h3>2) Owner's Engineer - Tender Support</h3>
         <p>Vendor-neutral support to prepare and run automation/IT tenders: RFI/RFP, BoQ, evaluation matrix, and final recommendation.</p>
         <a class="more" href="/package2">Learn more &raquo;</a>
       </article>
       <article class="card">
-        <img src="/images/3.png" alt="Review">
+        <img src="/images/3.png" alt="Review" loading="lazy" decoding="async">
         <h3>3) Independent Review of Bids & Modernization Projects</h3>
         <p>Objective comparison of proposals: technical fit, migration risks, cut-over plan, and 10-year TCO to select the right supplier.</p>
         <a class="more" href="/package3">Learn more &raquo;</a>
       </article>
       <article class="card">
-        <img src="/images/4.png" alt="Retainer">
+        <img src="/images/4.png" alt="Retainer" loading="lazy" decoding="async">
         <h3>4) Retainer / Second Opinion</h3>
         <p>On-demand expert advisory with priority SLA. Quarterly hour banks for reviews, negotiations, KPI reporting, and ongoing oversight.</p>
         <a class="more" href="/package4">Learn more &raquo;</a>

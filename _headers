@@ -1,2 +1,14 @@
 /news/index.json
   X-Robots-Tag: noindex
+
+# Cache static assets for 7 days
+/images/*
+  Cache-Control: public, max-age=604800, immutable
+/assets/*
+  Cache-Control: public, max-age=604800, immutable
+/styles.css
+  Cache-Control: public, max-age=604800
+/menu.js
+  Cache-Control: public, max-age=604800
+/sw.js
+  Cache-Control: public, max-age=604800
