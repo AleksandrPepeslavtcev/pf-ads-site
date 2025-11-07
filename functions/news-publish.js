@@ -238,16 +238,7 @@ async function githubGetFile({ repo, path, token, branch }) {
 
 async function updateSitemap({ repo, branch, token, entries }) {
   const site = 'https://www.pf-ads.com';
-  const staticPages = [
-    '/index.html',
-    '/package1.html',
-    '/package2.html',
-    '/package3.html',
-    '/package4.html',
-    '/news.html',
-    '/matrix.html',
-    '/contact.html'
-  ];
+  const staticPages = ["/","/package1","/package2","/package3","/package4","/news","/matrix","/contact"];
   const urls = [
     ...staticPages.map(p => `${site}${p}`),
     ...entries.map(e => `${site}${e.url}`)
