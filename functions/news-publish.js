@@ -56,7 +56,7 @@ export async function onRequestPost(context) {
     }
 
     const contentHtml = renderContent(content);
-    const pageHtml = buildNewsHtml({ title, content: contentHtml, date: d.toISOString(), linkedin_url, image_url: uploadedImageUrl, image_alt });
+    const pageHtml = buildNewsHtml({ title, content: contentHtml, date: d.toISOString(), linkedin_url, image_url: uploadedImageUrl, image_alt, page_url: pageUrl });
 
     // 1) Create/replace the news HTML page
     await githubPutFile({
@@ -96,6 +96,9 @@ export async function onRequestPost(context) {
       message: `Update news index for: ${title}`,
     });
 
+    // 3) Update sitemap.xml to include all news entries
+    await updateSitemap({ repo, branch, token: env.GITHUB_TOKEN, entries: filtered });
+
     return json({ success: true, url: pageUrl });
   } catch (err) {
     return json({ success: false, error: err.message, stack: err.stack }, 500);
@@ -120,15 +123,15 @@ function fromBase64Utf8(b64){
   return new TextDecoder().decode(bytes);
 }
 
-function buildNewsHtml({ title, content, date, linkedin_url, image_url, image_alt }) {
+function buildNewsHtml({ title, content, date, linkedin_url, image_url, image_alt, page_url }) {
   const safeTitle = escapeHtml(title || '');
   const byline = [new Date(date || Date.now()).toLocaleDateString('en-US'), linkedin_url ? `<a href="${escapeAttr(linkedin_url)}" target="_blank" rel="noopener">LinkedIn</a>` : '']
     .filter(Boolean)
-    .join(' · ');
+    .join(' | ');
 
   return `<!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>${safeTitle} — PF ADS</title>
+<title>${safeTitle} | PF ADS</title>
 <meta name="description" content="${safeTitle}">
 <link rel="icon" type="image/png" href="/assets/favicon-32.png" sizes="32x32">
 <link rel="icon" type="image/png" href="/assets/favicon-48.png" sizes="48x48">
@@ -139,6 +142,18 @@ function buildNewsHtml({ title, content, date, linkedin_url, image_url, image_al
 <meta property="og:description" content="${safeTitle}">
 <meta property="og:image" content="${image_url ? escapeAttr(image_url) : '/images/banner.png'}">
 <link rel="stylesheet" href="/styles.css">
+<link rel="canonical" href="https://www.pf-ads.com${escapeAttr(page_url || '')}">
+<meta property="og:url" content="https://www.pf-ads.com${escapeAttr(page_url || '')}">
+<script type="application/ld+json">${JSON.stringify({
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: safeTitle,
+    datePublished: date || new Date().toISOString(),
+    author: { '@type': 'Organization', name: 'PF Automation & Digital Solutions' },
+    publisher: { '@type': 'Organization', name: 'PF Automation & Digital Solutions', logo: { '@type': 'ImageObject', url: 'https://www.pf-ads.com/assets/icon-192.png' } },
+    image: image_url || '/images/banner.png',
+    mainEntityOfPage: `https://www.pf-ads.com${page_url || ''}`
+  })}</script>
 </head><body>
   <div class="nav container">
     <div class="brand">
@@ -149,7 +164,7 @@ function buildNewsHtml({ title, content, date, linkedin_url, image_url, image_al
       <a href="/news.html">News</a>
       <a href="/matrix.html">Evaluation Matrix</a>
       <a href="/contact.html">Contact</a>
-    </div>
+      
   </div>
   <div class='container'>
     <div class="hero"><img src="/images/banner.png" alt="News"><div class="hero-content">
@@ -161,9 +176,9 @@ function buildNewsHtml({ title, content, date, linkedin_url, image_url, image_al
       ${image_url ? `<figure><img src="${escapeAttr(image_url)}" alt="${escapeAttr(image_alt || safeTitle)}" class="post-image"></figure>` : ''}
       ${content}
     </section>
-    <p><a href="/news.html">← Back to News</a></p>
+    <p><a href="/news.html">&larr; Back to News</a></p>
   </div>
-  <div class='footer container'>© 2025 PF Automation & Digital Solution · <a href='mailto:info@pf-ads.com'>info@pf-ads.com</a> · +358-50-430-1138</div>
+  <div class='footer container'>&copy; 2025 PF Automation & Digital Solutions &middot; <a href='mailto:info@pf-ads.com'>info@pf-ads.com</a> &middot; +358-50-430-1138</div>
 </body></html>`;
 }
 
@@ -219,6 +234,26 @@ async function githubGetFile({ repo, path, token, branch }) {
   const res = await fetch(url, { headers: { 'Authorization': `token ${token}`, 'User-Agent': 'PF-ADS-Site' } });
   if (!res.ok) throw new Error(`GitHub GET ${path} failed: ${res.status}`);
   return res.json();
+}
+
+async function updateSitemap({ repo, branch, token, entries }) {
+  const site = 'https://www.pf-ads.com';
+  const staticPages = [
+    '/index.html',
+    '/package1.html',
+    '/package2.html',
+    '/package3.html',
+    '/package4.html',
+    '/news.html',
+    '/matrix.html',
+    '/contact.html'
+  ];
+  const urls = [
+    ...staticPages.map(p => `${site}${p}`),
+    ...entries.map(e => `${site}${e.url}`)
+  ];
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map(u=>`  <url><loc>${u}</loc></url>`).join('\n')}\n</urlset>\n`;
+  await githubPutFile({ repo, branch, path: 'sitemap.xml', content: xml, token, message: 'Update sitemap.xml with news entries' });
 }
 
 function extFromMime(m) {

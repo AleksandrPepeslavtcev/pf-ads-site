@@ -1,12 +1,12 @@
 ---
 layout: default
-title: "Блог PF-ADS"
-description: "Статьи и новости о цифровой рекламе"
+title: "Blog | PF-ADS"
+description: "Insights, updates, and notes about automation and digitalization."
 ---
 <section class="blog-header">
-    <h1>Блог PF-ADS</h1>
-    <p>Актуальные статьи о digital-маркетинге, кейсы и новости индустрии</p>
-    <a href="/admin/" class="admin-link">✏️ Написать новый пост</a>
+    <h1>Blog</h1>
+    <p>Short notes and updates from PF Automation &amp; Digital Solutions.</p>
+    <a href="/admin/" class="admin-link">Open Admin</a>
 </section>
 
 <section class="posts-grid">
@@ -16,12 +16,12 @@ description: "Статьи и новости о цифровой рекламе"
             <h2><a href="{{ post.url }}">{{ post.title }}</a></h2>
             
             <div class="post-meta">
-                <time datetime="{{ post.date | date_to_xmlschema }}">
+                <time datetime="{{ post.date | date_to_xmlschema }}">Date: {{ post.date | date: "%d.%m.%Y" }}</time>
                     📅 {{ post.date | date: "%d.%m.%Y" }}
                 </time>
                 
                 {% if post.categories %}
-                <span class="categories">
+                <span class="categories">Categories: {{ post.categories | join: ", " }}</span>
                     📁 {{ post.categories | join: ", " }}
                 </span>
                 {% endif %}
@@ -31,7 +31,7 @@ description: "Статьи и новости о цифровой рекламе"
             <p class="post-excerpt">{{ post.excerpt }}</p>
             {% endif %}
             
-            <a href="{{ post.url }}" class="read-more">Читать далее →</a>
+            <a href="{{ post.url }}" class="read-more">Read more &raquo;</a>
         </div>
     </article>
     {% endfor %}

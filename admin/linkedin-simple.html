@@ -17,30 +17,27 @@
   <h1>LinkedIn Importer - PF-ADS</h1>
   
   <div class="info">
-    <strong>Важно:</strong> Для доступа к постам через LinkedIn API необходимо:
+    <strong>Note:</strong> To use LinkedIn APIs in production you need:
     <ul>
-      <li>Приложение должно быть проверено и одобрено LinkedIn</li>
-      <li>Требуется Business Verification для доступа к API постов</li>
-    </ul>
-  </div>
+      <li>An approved LinkedIn Developer app with required products/scopes.</li>
+      <li>Business Verification and API access approval for the endpoints you need.</li>
+    </ul>\r\n  </div>
 
-  <div class="step">
-    <h3>1. Получить Authorization Code (Базовые разрешения)</h3>
+    <div class="step">
+    <h3>1. Get Authorization Code (basic demo)</h3>
     <button onclick="getAuthCode()">Get Basic Auth Code</button>
     <div>
       <label>Authorization Code:</label>
       <input type="text" id="authCode" style="width: 300px; padding: 5px;" placeholder="Paste code here">
     </div>
-  </div>
-
-  <div class="step">
-    <h3>2. Получить Access Token</h3>
+  </div><div class="step">
+    <h3>2. Exchange for Access Token</h3>
     <button onclick="getAccessToken()" id="tokenBtn">Get Access Token</button>
     <div id="tokenResult" class="debug"></div>
   </div>
 
   <div class="step">
-    <h3>3. Тест базового доступа</h3>
+    <h3>3. Fetch basic profile (demo)</h3>
     <button onclick="getProfile()" id="profileBtn" disabled>Get Basic Profile</button>
     <div id="profileResult" class="debug"></div>
   </div>
@@ -59,15 +56,13 @@
       
       const authUrl = `https://www.linkedin.com/oauth/v2/authorization?response_type=code&client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scope)}&state=${state}`;
       
-      window.open(authUrl, '_blank');
-      
-      alert('После авторизации скопируйте code из URL и вставьте в поле выше.');
+      window.open(authUrl, '_blank');`r`n      alert('After authorization, copy the code parameter from the redirected URL and paste it back here.');
     }
 
     async function getAccessToken() {
       const code = document.getElementById('authCode').value.trim();
       if (!code) {
-        alert('Введите authorization code');
+        alert("Please paste authorization code");
         return;
       }
 
@@ -102,7 +97,7 @@
 
     async function getProfile() {
       if (!accessToken) {
-        alert('No access token');
+        alert("Please paste authorization code");
         return;
       }
 

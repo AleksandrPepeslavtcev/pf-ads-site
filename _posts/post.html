@@ -6,20 +6,14 @@ layout: default
         <h1>{{ page.title }}</h1>
         
         <div class="post-meta">
-            <time datetime="{{ page.date | date_to_xmlschema }}">
-                📅 {{ page.date | date: "%d.%m.%Y" }}
-            </time>
+            <time datetime="{{ page.date | date_to_xmlschema }}">Date: {{ page.date | date: "%d.%m.%Y" }}</time>
             
             {% if page.categories %}
-            <span class="categories">
-                📁 {{ page.categories | join: ", " }}
-            </span>
+            <span class="categories">Categories: {{ page.categories | join: ", " }}</span>
             {% endif %}
             
             {% if page.tags %}
-            <span class="tags">
-                🏷️ {{ page.tags | join: ", " }}
-            </span>
+            <span class="tags">Tags: {{ page.tags | join: ", " }}</span>
             {% endif %}
         </div>
 
@@ -36,8 +30,8 @@ layout: default
 
     <footer class="post-footer">
         <div class="post-navigation">
-            <a href="/blog/" class="back-to-blog">← Все статьи</a>
-            <a href="/admin/" class="edit-post">✏️ Написать новый пост</a>
+            <a href="/blog/" class="back-to-blog">&larr; Back to Blog</a>
+            <a href="/admin/" class="edit-post">Open Admin</a>
         </div>
     </footer>
 </article>
