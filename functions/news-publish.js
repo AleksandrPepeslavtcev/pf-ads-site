@@ -156,10 +156,6 @@ function buildNewsHtml({ title, content, date, linkedin_url, image_url, image_al
     image: image_url || '/images/banner.png',
     mainEntityOfPage: `https://www.pf-ads.com${page_url || ''}`
   })}</script>
-
-<style>
-  .post-title{font-size:clamp(1.7rem,1.5vw+1.1rem,2.6rem);line-height:1.25;margin:0 0 10px;}
-</style>
 </head><body>
   <div class="nav container">
     <div class="brand">
@@ -174,7 +170,6 @@ function buildNewsHtml({ title, content, date, linkedin_url, image_url, image_al
   </div>
   <div class='container'>
     <div class="hero"><img src="/images/banner.png" alt="News"><div class="hero-content">
-      <span class="badge">Update</span>
       <h1 class="post-title">${safeTitle}</h1>
       <p>${byline}</p>
     </div></div>
