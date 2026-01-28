@@ -1,4 +1,4 @@
-// Cloudflare Pages Function: /functions/news-publish
+﻿// Cloudflare Pages Function: /functions/news-publish
 // Publishes a news post (usually mirrored from LinkedIn) into the repo:
 // - Creates /news/{yyyy-mm-dd}-{slug}.html
 // - Updates /news/index.json with metadata
@@ -238,7 +238,7 @@ async function githubGetFile({ repo, path, token, branch }) {
 
 async function updateSitemap({ repo, branch, token, entries }) {
   const site = 'https://www.pf-ads.com';
-  const staticPages = ["/","/package1","/package2","/package3","/package4","/news","/matrix","/contact"];
+  const staticPages = ["/","/package1","/package2","/package3","/package4","/news","/matrix","/contact","/about"];
   const urls = [
     ...staticPages.map(p => `${site}${p}`),
     ...entries.map(e => `${site}${e.url}`)
