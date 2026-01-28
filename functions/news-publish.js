@@ -1,4 +1,4 @@
-﻿// Cloudflare Pages Function: /functions/news-publish
+// Cloudflare Pages Function: /functions/news-publish
 // Publishes a news post (usually mirrored from LinkedIn) into the repo:
 // - Creates /news/{yyyy-mm-dd}-{slug}.html
 // - Updates /news/index.json with metadata
@@ -178,7 +178,7 @@ function buildNewsHtml({ title, content, date, linkedin_url, image_url, image_al
     </section>
     <p><a href="/news.html">&larr; Back to News</a></p>
   </div>
-  <div class='footer container'>&copy; 2025 PF Automation & Digital Solutions &middot; <a href='mailto:info@pf-ads.com'>info@pf-ads.com</a> &middot; +358-50-430-1138</div>
+  <div class='footer container'>&copy; 2025 PF Automation & Digital Solutions &middot; <a href='mailto:info@pf-ads.com'>info@pf-ads.com</a> &middot; <a href='https://www.linkedin.com/company/pf-ads/' target='_blank' rel='noopener'>LinkedIn</a> &middot; <a href='https://wa.me/358504301138' target='_blank' rel='noopener'>WhatsApp</a> &middot; +358-50-430-1138</div>
 </body></html>`;
 }
 
