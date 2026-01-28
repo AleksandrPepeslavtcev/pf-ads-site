@@ -39,8 +39,27 @@
     <div class="hero"><img src="/images/5.png" alt="Contact"><div class="hero-content">
       <span class="badge">Let's talk</span><h1>Contact</h1></div></div>
     <section class="section">
-      <div style="display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;">
-        <p style="margin:0">t: +358-50-430-1138, Email: <a href="mailto:info@pf-ads.com">info@pf-ads.com</a></p>
+      <div class="contact-column">
+        <div class="contact-line">PF Automation &amp; Digital Solutions</div>
+        <div class="contact-line">Email: <a href="mailto:info@pf-ads.com">info@pf-ads.com</a></div>
+        <div class="contact-links">
+          <a class="contact-pill" href="https://www.linkedin.com/company/pf-ads/" target="_blank" rel="noopener" aria-label="LinkedIn">
+            <span class="pill-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false">
+                <path fill="currentColor" d="M4.98 3.5C4.98 4.88 3.88 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.24 8.5h4.5V24h-4.5V8.5zm7.98 0h4.31v2.11h.06c.6-1.14 2.07-2.34 4.26-2.34 4.56 0 5.4 3 5.4 6.91V24h-4.5v-7.02c0-1.68-.03-3.85-2.35-3.85-2.35 0-2.71 1.82-2.71 3.72V24h-4.5V8.5z"/>
+              </svg>
+            </span>
+            LinkedIn
+          </a>
+          <a class="contact-pill" href="https://wa.me/358504301138" target="_blank" rel="noopener" aria-label="WhatsApp">
+            <span class="pill-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="16" height="16" aria-hidden="true" focusable="false">
+                <path fill="currentColor" d="M16.05 3C9.42 3 4 8.34 4 14.87c0 2.55.84 4.9 2.27 6.8L4 29l7.5-2.2c1.82.99 3.9 1.54 6.1 1.54 6.63 0 12.05-5.34 12.05-11.87C29.65 8.34 24.23 3 16.05 3zm5.93 14.72c-.25.7-1.47 1.34-2.02 1.37-.52.03-1.18.09-3.76-1.23-3.17-1.56-5.19-5.39-5.35-5.64-.16-.25-1.28-1.7-1.28-3.25 0-1.55.81-2.31 1.1-2.63.28-.31.6-.39.8-.39.2 0 .4 0 .58.01.19.01.44-.07.69.53.25.61.84 2.09.92 2.24.07.16.12.34.02.55-.09.22-.15.34-.31.53-.16.19-.33.43-.47.58-.16.16-.33.33-.14.65.19.31.86 1.42 1.86 2.3 1.28 1.14 2.36 1.5 2.71 1.67.35.17.55.14.74-.08.19-.22.86-1.01 1.09-1.35.22-.34.46-.28.77-.17.31.11 2.02.95 2.37 1.12.35.17.58.26.66.41.08.15.08.9-.17 1.6z"/>
+              </svg>
+            </span>
+            WhatsApp
+          </a>
+        </div>
         <div class="contact-cta">
           <button class="btn" id="calendlyBtn" type="button">Schedule first meeting</button>
         </div>
@@ -71,11 +90,21 @@
       });
     </script>
     <style>
-      .contact-cta{ display:flex; justify-content:flex-end; }
-      @media(max-width:700px){ .contact-cta{ width:100%; justify-content:stretch; } #calendlyBtn{ width:100%; } }
+      .contact-column{ display:flex; flex-direction:column; gap:12px; align-items:flex-start; }
+      .contact-line{ font-weight:600; }
+      .contact-line a{ font-weight:600; }
+      .contact-links{ display:flex; gap:12px; flex-wrap:wrap; }
+      .contact-pill{ display:inline-flex; align-items:center; gap:8px; padding:8px 12px; background:#e6e9ef; color:inherit; text-decoration:none; border-radius:6px; box-shadow:0 1px 3px rgba(0,0,0,0.12); }
+      .contact-pill:hover{ background:#d5dbe6; }
+      .pill-icon{ display:inline-flex; align-items:center; }
+      .contact-cta{ display:flex; justify-content:flex-start; }
+      @media(max-width:700px){
+        .contact-cta{ width:100%; }
+        #calendlyBtn{ width:100%; }
+      }
     </style>
     <p><a href="/">&larr; Back to Home</a></p>
   </div>
-  <div class='footer container'>&copy; 2025 PF Automation & Digital Solutions &middot; <a href='mailto:info@pf-ads.com'>info@pf-ads.com</a> &middot; <a href='https://www.linkedin.com/company/pf-ads/' target='_blank' rel='noopener'>LinkedIn</a> &middot; <a href='https://wa.me/358504301138' target='_blank' rel='noopener'>WhatsApp</a> &middot; +358-50-430-1138</div>
+    <div class='footer container'>&copy; 2025 PF Automation & Digital Solutions &middot; <a href='mailto:info@pf-ads.com'>info@pf-ads.com</a> &middot; <a href='https://www.linkedin.com/company/pf-ads/' target='_blank' rel='noopener' aria-label='LinkedIn profile'>LinkedIn</a> &middot; <a href='https://wa.me/358504301138' target='_blank' rel='noopener' aria-label='WhatsApp chat'>WhatsApp</a></div>
 </body>
 </html>
