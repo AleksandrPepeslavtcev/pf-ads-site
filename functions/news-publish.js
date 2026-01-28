@@ -79,7 +79,8 @@ export async function onRequestPost(context) {
       }
     } catch (_) { /* ignore if index.json not found yet */ }
 
-    const excerpt = (content || '').replace(/<[^>]*>/g, '').split('\n').slice(0, 3).join(' ').slice(0, 200);
+    const excerpt = (content || '').replace(/<[^>]*>/g, '').split('
+').slice(0, 3).join(' ').slice(0, 200);
     const newEntry = { title, url: pageUrl, date: d.toISOString(), source, linkedin_url: linkedin_url || '', excerpt };
 
     // De-duplicate by url
@@ -91,7 +92,8 @@ export async function onRequestPost(context) {
       repo,
       branch,
       path: indexPath,
-      content: JSON.stringify(filtered, null, 2) + '\n',
+      content: JSON.stringify(filtered, null, 2) + '
+',
       token: env.GITHUB_TOKEN,
       message: `Update news index for: ${title}`,
     });
@@ -154,6 +156,10 @@ function buildNewsHtml({ title, content, date, linkedin_url, image_url, image_al
     image: image_url || '/images/banner.png',
     mainEntityOfPage: `https://www.pf-ads.com${page_url || ''}`
   })}</script>
+
+<style>
+  .post-title{font-size:clamp(1.7rem,1.5vw+1.1rem,2.6rem);line-height:1.25;margin:0 0 10px;}
+</style>
 </head><body>
   <div class="nav container">
     <div class="brand">
@@ -164,12 +170,12 @@ function buildNewsHtml({ title, content, date, linkedin_url, image_url, image_al
       <a href="/news.html">News</a>
       <a href="/matrix.html">Evaluation Matrix</a>
       <a href="/contact.html">Contact</a>
-      
+    </div>
   </div>
   <div class='container'>
     <div class="hero"><img src="/images/banner.png" alt="News"><div class="hero-content">
       <span class="badge">Update</span>
-      <h1>${safeTitle}</h1>
+      <h1 class="post-title">${safeTitle}</h1>
       <p>${byline}</p>
     </div></div>
     <section class="section">
@@ -189,8 +195,12 @@ function renderContent(raw){
   if (/<[a-z][\s\S]*>/i.test(s)) return s;
   // Escape and convert blank-line separated paragraphs
   const esc = s.replace(/[&<>]/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;' }[c]));
-  const paras = esc.split(/\r?\n\s*\r?\n/g).map(p=>`<p>${p.replace(/\r?\n/g,'<br>')}</p>`);
-  return paras.join('\n');
+  const paras = esc.split(/\r?
+\s*\r?
+/g).map(p=>`<p>${p.replace(/\r?
+/g,'<br>')}</p>`);
+  return paras.join('
+');
 }
 
 function escapeHtml(s) {
@@ -243,7 +253,12 @@ async function updateSitemap({ repo, branch, token, entries }) {
     ...staticPages.map(p => `${site}${p}`),
     ...entries.map(e => `${site}${e.url}`)
   ];
-  const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map(u=>`  <url><loc>${u}</loc></url>`).join('\n')}\n</urlset>\n`;
+  const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${urls.map(u=>`  <url><loc>${u}</loc></url>`).join('
+')}
+</urlset>
+`;
   await githubPutFile({ repo, branch, path: 'sitemap.xml', content: xml, token, message: 'Update sitemap.xml with news entries' });
 }
 

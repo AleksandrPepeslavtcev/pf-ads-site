@@ -26,7 +26,9 @@
     .news-item a.more{color:var(--accent)}
     .empty{color:#666;text-align:center;margin:40px 0}
   </style>
-</head>
+<style>
+  .post-title{font-size:clamp(1.7rem,1.5vw+1.1rem,2.6rem);line-height:1.25;margin:0 0 10px;word-break:break-word;}
+</style></head>
 <body>
   <div class="nav container">
     <div class="brand">
@@ -40,12 +42,13 @@
       <a href="/about">About Us</a>
       <a href="/contact">Contact</a>  
   </div>
+  </div>
   <div class='container'>
     <div class="hero">
       <img src="/images/banner.png" alt="News banner">
       <div class="hero-content">
         <span class="badge">Updates</span>
-        <h1>Company News</h1>
+        <h1 class="post-title">Company News</h1>
         <p>Latest updates and LinkedIn posts mirrored to our site.</p>
       </div>
     </div>
