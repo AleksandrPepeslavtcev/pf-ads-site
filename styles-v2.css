@@ -205,7 +205,7 @@ a:hover {
 .card h3 {
   margin: 0 0 8px;
   font-size: 1.1rem;
-  color: var(--brand);
+  color: #111;
 }
 
 .card p {
