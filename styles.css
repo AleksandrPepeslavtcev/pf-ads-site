@@ -15,7 +15,7 @@ html,
 body {
   margin: 0;
   padding: 0;
-  background: linear-gradient(to right, #1e90ff, #cd853f);
+  background: #ffffff;
   color: var(--text);
   font-family: Inter, system-ui, Segoe UI, Roboto, Arial, sans-serif;
   line-height: 1.55;
@@ -503,7 +503,7 @@ img {
 .card,
 .section,
 .footer {
-  background: linear-gradient(to right, rgba(30, 144, 255, 0.15), rgba(205, 133, 63, 0.15));
+  background: #ffffff;
 }
 
 .post-title {
