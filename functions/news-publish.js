@@ -141,7 +141,7 @@ function buildNewsHtml({ title, content, date, linkedin_url, image_url, image_al
 <meta property="og:title" content="${safeTitle}">
 <meta property="og:description" content="${safeTitle}">
 <meta property="og:image" content="${image_url ? escapeAttr(image_url) : '/images/banner.png'}">
-<link rel="stylesheet" href="/styles.css">
+<link rel="stylesheet" href="/styles-v2.css">
 <link rel="canonical" href="https://www.pf-ads.com${escapeAttr(page_url || '')}">
 <meta property="og:url" content="https://www.pf-ads.com${escapeAttr(page_url || '')}">
 <script type="application/ld+json">${JSON.stringify({
