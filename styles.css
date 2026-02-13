@@ -112,39 +112,9 @@ a:hover {
   letter-spacing: 0.3px;
 }
 
-.brand-mark {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  width: 208px;
+.brand img {
   height: 72px;
-  padding: 8px 10px;
-  background: #2a90f2;
-  text-decoration: none;
-  line-height: 1.05;
-}
-
-.brand-line {
-  display: block;
-  font-size: 24px;
-  font-weight: 800;
-  letter-spacing: -0.8px;
-}
-
-.brand-pf {
-  color: #0b1f3a;
-}
-
-.brand-ads {
-  color: #f3b338;
-}
-
-.brand-sub {
-  display: block;
-  color: #0b1f3a;
-  font-size: 15px;
-  font-weight: 500;
-  letter-spacing: 0;
+  width: auto;
 }
 
 .badge {
@@ -433,21 +403,8 @@ img {
   }
 
   .brand img {
-    height: auto;
-  }
-
-  .brand-mark {
-    width: 150px;
-    height: 52px;
-    padding: 6px 8px;
-  }
-
-  .brand-line {
-    font-size: 20px;
-  }
-
-  .brand-sub {
-    font-size: 11px;
+    height: 48px;
+    width: auto;
   }
 
   .hero-content {
