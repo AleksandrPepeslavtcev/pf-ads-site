@@ -79,8 +79,7 @@ export async function onRequestPost(context) {
       }
     } catch (_) { /* ignore if index.json not found yet */ }
 
-    const excerpt = (content || '').replace(/<[^>]*>/g, '').split('
-').slice(0, 3).join(' ').slice(0, 200);
+    const excerpt = (content || '').replace(/<[^>]*>/g, '').split('\n').slice(0, 3).join(' ').slice(0, 200);
     const newEntry = { title, url: pageUrl, date: d.toISOString(), source, linkedin_url: linkedin_url || '', excerpt };
 
     // De-duplicate by url
@@ -92,8 +91,7 @@ export async function onRequestPost(context) {
       repo,
       branch,
       path: indexPath,
-      content: JSON.stringify(filtered, null, 2) + '
-',
+      content: JSON.stringify(filtered, null, 2) + '\n',
       token: env.GITHUB_TOKEN,
       message: `Update news index for: ${title}`,
     });
@@ -190,12 +188,8 @@ function renderContent(raw){
   if (/<[a-z][\s\S]*>/i.test(s)) return s;
   // Escape and convert blank-line separated paragraphs
   const esc = s.replace(/[&<>]/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;' }[c]));
-  const paras = esc.split(/\r?
-\s*\r?
-/g).map(p=>`<p>${p.replace(/\r?
-/g,'<br>')}</p>`);
-  return paras.join('
-');
+  const paras = esc.split(/\r?\n\s*\r?\n/g).map(p=>`<p>${p.replace(/\r?\n/g,'<br>')}</p>`);
+  return paras.join('\n');
 }
 
 function escapeHtml(s) {
@@ -250,8 +244,7 @@ async function updateSitemap({ repo, branch, token, entries }) {
   ];
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${urls.map(u=>`  <url><loc>${u}</loc></url>`).join('
-')}
+${urls.map(u=>`  <url><loc>${u}</loc></url>`).join('\n')}
 </urlset>
 `;
   await githubPutFile({ repo, branch, path: 'sitemap.xml', content: xml, token, message: 'Update sitemap.xml with news entries' });
