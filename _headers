@@ -10,6 +10,8 @@
   Cache-Control: public, max-age=604800
 /styles-v2.css
   Cache-Control: public, max-age=604800
+/styles-v3.css
+  Cache-Control: public, max-age=604800
 /menu.js
   Cache-Control: public, max-age=604800
 /sw.js
