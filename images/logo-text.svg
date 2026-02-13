@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="208" height="72" viewBox="0 0 208 72" role="img" aria-label="PF ADS Automation and Digital Solutions">
-  <rect width="208" height="72" fill="#2a90f2"/>
-  <text x="24" y="30" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="700" letter-spacing="-0.8" fill="#0b1f3a">PF</text>
-  <text x="67" y="30" font-family="Arial, Helvetica, sans-serif" font-size="22" font-weight="700" letter-spacing="-0.8" fill="#f3b338">ADS</text>
+  <rect width="208" height="72" fill="#3f93e2"/>
+  <text x="24" y="31" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700" letter-spacing="-0.8" fill="#0b1f3a">PF</text>
+  <text x="69" y="31" font-family="Arial, Helvetica, sans-serif" font-size="24" font-weight="700" letter-spacing="-0.8" fill="#f3b338">ADS</text>
   <text x="24" y="48" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="500" fill="#0b1f3a">Automation &amp; Digital</text>
   <text x="24" y="61" font-family="Arial, Helvetica, sans-serif" font-size="12" font-weight="500" fill="#0b1f3a">Solutions</text>
 </svg>
