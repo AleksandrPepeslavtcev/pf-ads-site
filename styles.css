@@ -58,21 +58,22 @@ a:hover {
 .dropdown-toggle {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  background: rgba(255,255,255,0.9);
-  border: 1px solid #d8d8d8;
-  border-radius: 10px;
-  padding: 8px 12px;
+  gap: 6px;
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  padding: 0;
   cursor: pointer;
-  font-weight: 600;
+  font: inherit;
+  text-decoration: underline;
   color: inherit;
 }
 
 .dropdown-toggle::after {
-  content: "▼";
-  font-size: 0.65rem;
+  content: "\25BE";
+  font-size: 0.55rem;
   opacity: 0.8;
-  margin-left: 4px;
+  margin-top: 2px;
 }
 
 .dropdown-menu {
@@ -87,20 +88,20 @@ a:hover {
   min-width: 240px;
   box-shadow: 0 10px 24px rgba(0,0,0,0.12);
   flex-direction: column;
-  gap: 8px;
+  gap: 2px;
   z-index: 10;
 }
 
-.nav-item.dropdown:hover .dropdown-menu {
-  display: flex;
+.dropdown-menu a {
+  display: block;
+  padding: 6px 8px;
+  white-space: nowrap;
 }
 
+.nav-item.dropdown:hover .dropdown-menu,
+.nav-item.dropdown:focus-within .dropdown-menu,
 .nav-item.dropdown.open .dropdown-menu {
   display: flex;
-  position: static;
-  box-shadow: none;
-  border: none;
-  padding: 6px 0 0;
 }
 
 .brand {
@@ -461,12 +462,28 @@ img {
     justify-content: space-between;
   }
 
+  .nav-item.dropdown {
+    width: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
   .dropdown-menu {
     position: static;
     width: 100%;
     box-shadow: none;
     border: none;
-    padding: 6px 0 0;
+    padding: 0;
+    min-width: 0;
+    margin-top: 8px;
+  }
+
+  .nav-item.dropdown .dropdown-menu {
+    display: none;
+  }
+
+  .nav-item.dropdown.open .dropdown-menu {
+    display: flex;
   }
 }
 
@@ -501,23 +518,4 @@ img {
 
 .hero .badge {
   display: none;
-}
-
-/* --- Link visibility overrides --- */
-a {
-  color: #000 !important;
-  text-decoration: underline !important;
-}
-
-a:hover {
-  color: #333 !important;
-  text-decoration: underline !important;
-}
-
-.card .more {
-  color: #000 !important;
-}
-
-.card .more:hover {
-  color: #333 !important;
 }
