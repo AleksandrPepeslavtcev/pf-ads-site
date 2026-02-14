@@ -157,7 +157,7 @@ function buildNewsHtml({ title, content, date, linkedin_url, image_url, image_al
 </head><body>
   <div class="nav container">
     <div class="brand">
-      <img src="/images/logo-text-v4.svg" alt="PF ADS logo">
+      <img src="/images/logotransparent.png" alt="PF ADS logo">
     </div>
     <div style="display:flex;gap:16px">
       <a href="/index.html">Home</a>
